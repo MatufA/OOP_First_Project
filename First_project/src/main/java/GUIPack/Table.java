@@ -33,8 +33,8 @@ public class Table extends JFrame {
 		
 		
 		setLayout(new FlowLayout());
-		String[] columnNames = {"MAC","SSID","Frequncy","Signal","Time","Id","Latitude",
-				                "Longitude","Altitude"};
+		String[] columnNames = {"Time","Id","MAC","SSID","Latitude",
+				                "Longitude","Altitude","Frequncy","Signal"};
 		int numOfRows = 0; //csv_table
 		try(
 				Connection con = DBConnection.getConnection(); //connect to database

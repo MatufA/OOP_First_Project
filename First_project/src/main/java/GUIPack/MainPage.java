@@ -37,6 +37,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.border.LineBorder;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.Toolkit;
@@ -356,7 +358,7 @@ public class MainPage extends JFrame {
 		infoIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Info_32px.png")));
 		GroupLayout gl_controlPanel = new GroupLayout(controlPanel);
 		gl_controlPanel.setHorizontalGroup(
-			gl_controlPanel.createParallelGroup(Alignment.LEADING)
+			gl_controlPanel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_controlPanel.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(userIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -381,7 +383,7 @@ public class MainPage extends JFrame {
 					.addGap(18)
 					.addComponent(kmlIcon)
 					.addContainerGap(20, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_controlPanel.createSequentialGroup()
+				.addGroup(gl_controlPanel.createSequentialGroup()
 					.addGap(18)
 					.addComponent(csvButton, GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
 					.addContainerGap())
@@ -411,12 +413,14 @@ public class MainPage extends JFrame {
 		);
 		
 		csvPick = new JPopupMenu();
-		
-		
 		controlPanel.setLayout(gl_controlPanel);
 		
 		JMenuItem mainDatabase = new JMenuItem("Main Database");
+		mainDatabase.setHorizontalAlignment(SwingConstants.CENTER);
+		mainDatabase.setSelected(true);
 		JMenuItem filterDatabase = new JMenuItem("Filtered Database");
+		filterDatabase.setHorizontalAlignment(SwingConstants.CENTER);
+		filterDatabase.setSelected(true);
 		
 		class maindata implements ActionListener{
 			@Override
@@ -439,9 +443,21 @@ public class MainPage extends JFrame {
 		}
 		mainDatabase.addActionListener(new maindata());
 		
-		class filterdata implements ActionListener{
+		class filterdata implements ActionListener, PopupMenuListener{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void popupMenuCanceled(PopupMenuEvent arg0) {
+				csvPick.setVisible(false);
+				
+			}
+
+			@Override
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
 				// parent component of the dialog
 				JFrame parentFrame = new JFrame();
 				 
@@ -455,14 +471,26 @@ public class MainPage extends JFrame {
 				    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
 				    WriteCsv write = new WriteCsv(filterDB.getdatabase() ,fileToSave.getAbsolutePath());
 					if(!filterDB.isEmpty())write.write();
+					csvPick.setVisible(false);
+				}else if(userSelection == JFileChooser.CANCEL_OPTION) {
+					csvPick.setVisible(false);
 				}
+				
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
 			}
 		}
-		filterDatabase.addActionListener(new filterdata());
+		filterDatabase.addActionListener( new filterdata());
+		
 		
 		csvPick.add(mainDatabase);
 		csvPick.add(filterDatabase);
 		addPopup(csvButton, csvPick);
+		
 	}
 	
 	private void googleMaps() {
