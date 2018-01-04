@@ -9,6 +9,7 @@ import java.nio.file.attribute.FileTime;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -23,7 +24,6 @@ import main.java.writePack.WriteCsv;
 
 import java.awt.Color;
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import javax.swing.JLabel;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
@@ -53,11 +53,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JToggleButton;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import javax.swing.JPopupMenu;
 import java.awt.Component;
 
@@ -82,7 +78,7 @@ public class MainPage extends JFrame {
 	private JLayeredPane layeredPane;
 	private JLayeredPane tableDisplay;
 	private JLayeredPane mapDisplay;
-	private JLayeredPane filterDisplay;
+	private JLayeredPane filterDisplay, userLocationDisplay, modemLocationDisplay;
 	private JLabel userIcon;
 	private JLabel modemIcon;
 	private JLabel infoIcon;
@@ -90,6 +86,12 @@ public class MainPage extends JFrame {
 	private JPanel upload;
 	private JLayeredPane infoDisplay;
 	private JPopupMenu csvPick;
+	private JTextField txtfilter;
+	private JToggleButton tglbtnFilterByMac;
+	private JToggleButton tglbtnFilterByTime;
+	private JToggleButton tglbtnFilterByLocation;
+	private JToggleButton tglbtnFilterById;
+	private JTextField choosemac;
 	/**
 	 * Launch the application.
 	 */
@@ -126,108 +128,6 @@ public class MainPage extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		
-		
-		
-		JPanel upperbar = new JPanel();
-		upperbar.setBorder(new LineBorder(new Color(0, 0, 0)));
-		upperbar.setBackground(UIManager.getColor("activeCaption"));
-		upperbar.setBounds(52, 0, 754, 71);
-		contentPane.add(upperbar);
-		
-		upload = new JPanel();
-		upload.setBounds(100, 100, 630, 421);
-		upload.setVisible(false);
-		
-		layeredPane = new JLayeredPane();
-		layeredPane.setBackground(SystemColor.activeCaption);
-		
-		txtDatabase = new JTextField();
-		txtDatabase.setBounds(0, 0, 92, 65);
-		txtDatabase.setHorizontalAlignment(SwingConstants.CENTER);
-		txtDatabase.setBackground(SystemColor.activeCaption);
-		txtDatabase.setFont(new Font("Calibri Light", Font.PLAIN, 12));
-		txtDatabase.setDropMode(DropMode.INSERT);
-		txtDatabase.setEditable(false);
-		txtDatabase.setText("Database: " + this.database.get_size());
-		
-		textFilter = new JTextField();
-		textFilter.setBounds(98, 0, 103, 65);
-		textFilter.setHorizontalAlignment(SwingConstants.CENTER);
-		textFilter.setBackground(SystemColor.activeCaption);
-		textFilter.setText("filter: 0");
-		textFilter.setFont(new Font("Calibri Light", Font.PLAIN, 12));
-		textFilter.setEditable(false);
-		textFilter.setDropMode(DropMode.INSERT);
-		
-		logoff = new JLabel("");
-		logoff.setBounds(691, 19, 32, 32);
-		logoff.setForeground(SystemColor.inactiveCaption);
-		logoff.setBackground(SystemColor.window);
-		logoff.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				System.exit(0);
-			}
-		});
-		logoff.setLabelFor(upperbar);
-		logoff.setHorizontalAlignment(SwingConstants.LEFT);
-		logoff.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Logout Rounded Up_32px.png")));
-		layeredPane.setLayout(null);
-		layeredPane.add(txtDatabase);
-		layeredPane.add(textFilter);
-		layeredPane.add(logoff);
-		GroupLayout gl_upperbar = new GroupLayout(upperbar);
-		gl_upperbar.setHorizontalGroup(
-			gl_upperbar.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_upperbar.createSequentialGroup()
-					.addGap(1)
-					.addComponent(layeredPane, GroupLayout.PREFERRED_SIZE, 742, GroupLayout.PREFERRED_SIZE))
-		);
-		gl_upperbar.setVerticalGroup(
-			gl_upperbar.createParallelGroup(Alignment.LEADING)
-				.addComponent(layeredPane, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-		);
-		upperbar.setLayout(gl_upperbar);
-		
-		display = new JPanel();
-		display.setBorder(new LineBorder(new Color(0, 0, 0)));
-		display.setBackground(Color.WHITE);
-		display.setBounds(52, 67, 754, 433);
-		contentPane.add(display);
-		display.setLayout(new CardLayout(0, 0));
-		display.setVisible(false);
-		
-		JLayeredPane modemLocationDisplay = new JLayeredPane();
-		display.add(modemLocationDisplay, "name_353906401068356");
-		
-		JLayeredPane userLocationDisplay = new JLayeredPane();
-		display.add(userLocationDisplay, "name_353928723796349");
-		
-		tableDisplay = new JLayeredPane();
-		display.add(tableDisplay, "name_353803376029634");
-		
-		mapDisplay = new JLayeredPane();
-		display.add(mapDisplay, "name_353839197399555");
-		
-		filterDisplay = new JLayeredPane();
-		display.add(filterDisplay, "name_353859816218952");
-		
-		infoDisplay = new JLayeredPane();
-		infoDisplay.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				display.removeAll();
-				display.repaint();
-				display.revalidate();
-				
-				display.add(infoDisplay);
-				display.repaint();
-				display.revalidate();
-			}
-		});
-		display.add(infoDisplay, "name_366413875173549");
-		
 		JPanel controlPanel = new JPanel();
 		controlPanel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		controlPanel.setBackground(new Color(47, 79, 79));
@@ -255,14 +155,8 @@ public class MainPage extends JFrame {
 		filterIcon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				display.removeAll();
-				display.repaint();
-				display.revalidate();
-				
-				display.add(filterDisplay);
-				display.repaint();
-				display.revalidate();
-				
+				contentPane.add(filterDisplay);
+				filterDisplay.setVisible(true);
 			}
 		});
 		filterIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/filter_32px.png")));
@@ -421,7 +315,7 @@ public class MainPage extends JFrame {
 		JMenuItem filterDatabase = new JMenuItem("Filtered Database");
 		filterDatabase.setHorizontalAlignment(SwingConstants.CENTER);
 		filterDatabase.setSelected(true);
-		
+
 		class maindata implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -441,7 +335,6 @@ public class MainPage extends JFrame {
 				}
 			}
 		}
-		mainDatabase.addActionListener(new maindata());
 		
 		class filterdata implements ActionListener, PopupMenuListener{
 			@Override
@@ -484,12 +377,190 @@ public class MainPage extends JFrame {
 				
 			}
 		}
+		
+		mainDatabase.addActionListener(new maindata());
 		filterDatabase.addActionListener( new filterdata());
 		
 		
 		csvPick.add(mainDatabase);
 		csvPick.add(filterDatabase);
 		addPopup(csvButton, csvPick);
+		
+		
+		
+		
+		JPanel upperbar = new JPanel();
+		upperbar.setBorder(new LineBorder(new Color(0, 0, 0)));
+		upperbar.setBackground(UIManager.getColor("activeCaption"));
+		upperbar.setBounds(52, 0, 754, 71);
+		contentPane.add(upperbar);
+		
+		upload = new JPanel();
+		upload.setBounds(100, 100, 630, 421);
+		upload.setVisible(false);
+		
+		layeredPane = new JLayeredPane();
+		layeredPane.setBackground(SystemColor.activeCaption);
+		
+		txtDatabase = new JTextField();
+		txtDatabase.setBounds(0, 0, 92, 65);
+		txtDatabase.setHorizontalAlignment(SwingConstants.CENTER);
+		txtDatabase.setBackground(SystemColor.activeCaption);
+		txtDatabase.setFont(new Font("Calibri Light", Font.PLAIN, 12));
+		txtDatabase.setDropMode(DropMode.INSERT);
+		txtDatabase.setEditable(false);
+		txtDatabase.setText("Database: " + this.database.get_size());
+		
+		textFilter = new JTextField();
+		textFilter.setBounds(98, 0, 103, 65);
+		textFilter.setHorizontalAlignment(SwingConstants.CENTER);
+		textFilter.setBackground(SystemColor.activeCaption);
+		textFilter.setText("filter: 0");
+		textFilter.setFont(new Font("Calibri Light", Font.PLAIN, 12));
+		textFilter.setEditable(false);
+		textFilter.setDropMode(DropMode.INSERT);
+		
+		logoff = new JLabel("");
+		logoff.setBounds(691, 19, 32, 32);
+		logoff.setForeground(SystemColor.inactiveCaption);
+		logoff.setBackground(SystemColor.window);
+		logoff.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				System.exit(0);
+			}
+		});
+		logoff.setLabelFor(upperbar);
+		logoff.setHorizontalAlignment(SwingConstants.LEFT);
+		logoff.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Logout Rounded Up_32px.png")));
+		layeredPane.setLayout(null);
+		layeredPane.add(txtDatabase);
+		layeredPane.add(textFilter);
+		layeredPane.add(logoff);
+		GroupLayout gl_upperbar = new GroupLayout(upperbar);
+		gl_upperbar.setHorizontalGroup(
+			gl_upperbar.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_upperbar.createSequentialGroup()
+					.addGap(1)
+					.addComponent(layeredPane, GroupLayout.PREFERRED_SIZE, 742, GroupLayout.PREFERRED_SIZE))
+		);
+		gl_upperbar.setVerticalGroup(
+			gl_upperbar.createParallelGroup(Alignment.LEADING)
+				.addComponent(layeredPane, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+		);
+		upperbar.setLayout(gl_upperbar);
+		
+		display = new JPanel();
+		display.setBorder(new LineBorder(new Color(0, 0, 0)));
+		display.setBackground(Color.WHITE);
+		display.setBounds(50, 70, 754, 401);
+		contentPane.add(display);
+		display.setVisible(false);
+		display.setLayout(null);
+		
+		JLayeredPane modemLocationDisplay = new JLayeredPane();
+		modemLocationDisplay.setBounds(-13, 0, 765, 431);
+		display.add(modemLocationDisplay);
+		
+		JLayeredPane userLocationDisplay = new JLayeredPane();
+		userLocationDisplay.setBounds(-13, 0, 765, 431);
+		display.add(userLocationDisplay);
+		
+		tableDisplay = new JLayeredPane();
+		tableDisplay.setBounds(-13, 0, 765, 431);
+		display.add(tableDisplay);
+		
+		mapDisplay = new JLayeredPane();
+		mapDisplay.setBounds(-13, 0, 765, 431);
+		display.add(mapDisplay);
+		
+		
+		filterDisplay = new JLayeredPane();
+		filterDisplay.setBounds(-13, 0, 765, 431);
+		display.add(filterDisplay);
+		
+		Vector<String> filternames = new Vector<>();
+		txtfilter = new JTextField();
+		txtfilter.setFont(new Font("Calibri Light", Font.BOLD, 16));
+		txtfilter.setBounds(66, 29, 575, 32);
+		filterDisplay.add(txtfilter);
+		txtfilter.setColumns(10);
+		txtfilter.setText("filter( )");
+		
+		
+		tglbtnFilterByMac = new JToggleButton("Filter By mac");
+	    tglbtnFilterByMac.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(tglbtnFilterByMac.isSelected()) {
+					String newstr = txtfilter.getText().substring(0, txtfilter.getText().length()) + "MAC)";
+					txtfilter.setText(newstr);
+					
+					choosemac = new JTextField();
+					choosemac.setBounds(93, 100, 121, 23);
+					
+					filterDisplay.add(choosemac);
+					choosemac.setColumns(10);
+					
+					filterDisplay.remove(txtfilter);
+					filterDisplay.add(txtfilter);
+					contentPane.add(filterDisplay);
+					if(tglbtnFilterByMac.isSelected()) {
+						  String str = "(" + choosemac.getText() + ")";
+				          newstr ="";
+				          if(choosemac.getText().split(":").length==6) {
+				        	  newstr = txtfilter.getText().substring(0, str.length()) + str;
+				          }
+						  txtfilter.setText(newstr); 
+						  choosemac = new JTextField();
+						  choosemac.setBounds(93, 100, 121, 23);
+				          
+				          str = "";
+				          filterDisplay.remove(txtfilter);
+				          contentPane.add(filterDisplay);
+					}
+				}
+			}
+		});
+	    
+		tglbtnFilterByMac.setBounds(93, 72, 121, 23);
+		filterDisplay.add(tglbtnFilterByMac);
+		
+		tglbtnFilterByTime = new JToggleButton("Filter By Time");
+		tglbtnFilterByTime.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				filternames.add("Time");
+			}
+		});
+		
+		tglbtnFilterByTime.setBounds(236, 72, 121, 23);
+		filterDisplay.add(tglbtnFilterByTime);
+		
+		tglbtnFilterByLocation = new JToggleButton("Filter By Location");
+		tglbtnFilterByLocation.setBounds(379, 72, 121, 23);
+		filterDisplay.add(tglbtnFilterByLocation);
+		
+		tglbtnFilterById = new JToggleButton("Filter By ID");
+		tglbtnFilterById.setBounds(520, 72, 121, 23);
+		filterDisplay.add(tglbtnFilterById);
+		
+		infoDisplay = new JLayeredPane();
+		infoDisplay.setBounds(-10055, -10093, 752, 431);
+		infoDisplay.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				display.removeAll();
+				display.repaint();
+				display.revalidate();
+				
+				display.add(infoDisplay);
+				display.repaint();
+				display.revalidate();
+			}
+		});
+		display.add(infoDisplay);
+		
 		
 	}
 	

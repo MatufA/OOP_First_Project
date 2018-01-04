@@ -27,12 +27,13 @@ public class MainDB {
 	}
 	
 	public boolean add(List<List<Network>> data) {
-		if(data.get(0).get(0) instanceof Network) {
-			_database.addAll(data);
-			removeEmpty();
-			sort();
-			return true;
-		}else return false;
+		if(!data.isEmpty()) {
+				_database.addAll(data);
+				removeEmpty();
+				sort();
+				return true;
+		}
+		return false;
 	}
 
 	public boolean addList(List<Network> data) {
@@ -45,7 +46,7 @@ public class MainDB {
 	}
 	
 	public void removeAll() {
-		if(isEmpty()) {
+		if(!isEmpty()) {
 			_database.removeAll(_database);
 		}
 	}	
