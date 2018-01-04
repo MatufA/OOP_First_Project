@@ -33,10 +33,10 @@ public class FilterByDate extends Filter{
 	}
 	/*
 	 *After constract Filter by Date, run filter function 
-	 *@return String (Succed of Fail)
+	 *@return  true or false
 	 */
 	@Override
-	public String filter() {
+	public boolean filter() {
 		List<Network> tempList;
 		if(!this.file.isEmpty()) {
 			for (List<Network> runList: this.file) {
@@ -54,9 +54,37 @@ public class FilterByDate extends Filter{
 					}
 				}	
 			}
-			return "Filtered Succeed!";
+			return true;
 		}else {
-			return "Database is empty!";
+			return false;
+			}
+	}
+	/*
+	 *After constract Filter by Date, run filterNOT for exclude 
+	 *@return true or false
+	 */
+	@Override
+	public boolean filterNOT() {
+		List<Network> tempList;
+		if(!this.file.isEmpty()) {
+			for (List<Network> runList: this.file) {
+				if(runList.size() >= 1) {
+					tempList = new ArrayList<>();
+					for (Network network : runList) {
+						wifiSpot = new Network(network);
+						if(!comperable()) {
+							tempList.add(network);
+						}
+					}
+					if(tempList.size() >=1) {
+						size += tempList.size();
+						this.filteredFile.add(tempList);
+					}
+				}	
+			}
+			return true;
+		}else {
+			return false;
 			}
 	}
 	/*
@@ -93,4 +121,5 @@ public class FilterByDate extends Filter{
 	public int getSize() {
 		return size;
 	}
+	
 }

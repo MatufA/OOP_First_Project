@@ -239,6 +239,7 @@ public class ReadCsv {
 							.collect(Collectors.toList()));
 				}else {
 					this.database.add(net);
+					
 				}
 			}
 
@@ -283,6 +284,7 @@ public class ReadCsv {
 	//Check if file type is unauthorized 
 	public void unauthorizedFile(String unauthorizedFile) {
 		System.err.println(unauthorizedFile+" - " +"Unauthorized File, please change the file to authorized file (csv,txt or kml)!"); 
+
 	}
 
 }

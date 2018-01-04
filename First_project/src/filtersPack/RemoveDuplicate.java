@@ -27,7 +27,7 @@ public class RemoveDuplicate extends Filter{
 	}
 
 	@Override
-	public String filter() {
+	public boolean filter() {
 		List<Network> tempList = new ArrayList<>();
 		if(!this.file.isEmpty()) {
 			for (List<Network> runList: this.file) {
@@ -47,9 +47,36 @@ public class RemoveDuplicate extends Filter{
 					}
 				}	
 			}
-			return "Remove duplicate Filtered Succeed!";
+			return true;
 		}else {
-			return "Database is empty!";
+			return false;
+		}
+	}
+
+	@Override
+	public boolean filterNOT() {
+		List<Network> tempList = new ArrayList<>();
+		if(!this.file.isEmpty()) {
+			for (List<Network> runList: this.file) {
+				if(runList.size() >= 1) {
+					for (Network network : runList) {
+						wifiSpot = new Network();
+						wifiSpot = network;
+						if(comperable()) {
+							tempList.add(wifiSpot);
+							keyOfMAC.put(wifiSpot.getMac(), 1);
+						}
+					}
+					if(tempList.size() >=1) {
+						size += tempList.size();
+						this.filteredFile.add(tempList);
+						tempList = new ArrayList<>();
+					}
+				}	
+			}
+			return true;
+		}else {
+			return false;
 		}
 	}
 
@@ -64,7 +91,9 @@ public class RemoveDuplicate extends Filter{
 	public List<List<Network>> getFilteredFile() {
 		return this.filteredFile;
 	}
+	@Override
 	public int getSize() {
 		return this.size;
 	}
+
 }

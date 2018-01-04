@@ -31,7 +31,7 @@ public class UserLocation {
 	 * @param List<Network>  database (filtered by three MACs)
 	 * */
 	public UserLocation(List<List<Network>> file) {
-		this.database = file;
+		this.database.addAll(file);
 		this.filteredDatbase = new ArrayList<>();
 		this.piMap = new HashMap<>();
 	}
@@ -46,16 +46,16 @@ public class UserLocation {
 	 * @param Integer signal_3
 	 * @return Network (weighted center point)
 	 * */
-	public Network WeightedCenter(String MAC_1, int signal_1, String MAC_2, int signal_2, String MAC_3,int signal_3) {
+	public Network WeightedCenter(List<Network> listOfwifi) {
 		/*Hsa map of given MAC and signal øespectively*/
 		HashMap<String, Integer> userMAC = new HashMap<>();
-		userMAC.put(MAC_1, signal_1);
-		userMAC.put(MAC_2, signal_2);
-		userMAC.put(MAC_3, signal_3);
+		for (Network network : listOfwifi) {
+			userMAC.put(network.getMac(), network.getSignal());
+		}
 		sort(database);
 		/*List of filtered by given MACs*/
 		List<List<Network>> listOfMAC = getOrder();
-		listOfMAC = threeNetwork(listOfMAC,new String[] {MAC_1, MAC_2, MAC_3});
+		listOfMAC = threeNetwork(listOfMAC,listOfwifi);
 		Network temp;
 		
 		for (List<Network> list : listOfMAC) {
@@ -143,19 +143,15 @@ public class UserLocation {
 		return listOfMAC;
 	}
 	
-	private List<List<Network>> threeNetwork(List<List<Network>> listOfMAC, String[] mac){
+	private List<List<Network>> threeNetwork(List<List<Network>> listOfMAC, List<Network> mac){
 		List<List<Network>> checklist = new ArrayList<>();
-		for (List<Network> list : checklist) {
-			if (list.size()==1) {
-				for (String MAC : mac) {
-					if(!list.get(0).getMac().equals(MAC)) list.add(new Network(MAC, list.get(0).getLat(), list.get(0).getLon(), list.get(0).getAlt()));
-				}
-			}else if(list.size()==2) {
-				for (String MAC : mac) {
-					if(!list.get(0).getMac().equals(MAC) || !list.get(1).getMac().equals(MAC)) 
-						list.add(new Network(MAC, list.get(0).getLat(), list.get(0).getLon(), list.get(0).getAlt()));
-				}
+		List<Network> tempList = new ArrayList<>();
+		for (List<Network> list : listOfMAC) {
+			tempList.addAll(list);
+			for (Network network : list) {
+				if(!mac.contains(network)) tempList.add(new Network(network.getMac(), network.getLat(), network.getLon(), network.getAlt()));
 			}
+			
 		}
 		return checklist;
 	}

@@ -20,8 +20,6 @@ import javax.swing.JFileChooser;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import readPack.ReadCsv;
-
 import javax.swing.border.BevelBorder;
 import javax.swing.UIManager;
 import java.awt.SystemColor;
@@ -35,6 +33,7 @@ public class Home extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel upload;
+	private static File[] selectedFile;
 	/**
 	 * Launch the application.
 	 */
@@ -66,7 +65,6 @@ public class Home extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
 
 		upload = new JPanel();
 		upload.setBounds(100, 100, 630, 421);
@@ -156,18 +154,29 @@ public class Home extends JFrame {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileFilter(new FileNameExtensionFilter("csv file only (.csv)","csv"));
 		fileChooser.setAcceptAllFileFilterUsed(false);
-		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.setMultiSelectionEnabled(true);
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		getContentPane().add(fileChooser, BorderLayout.CENTER);
 		int result = fileChooser.showOpenDialog(upload);
-		 String path="";
+		//File file;
 		if (result == JFileChooser.APPROVE_OPTION) {
-		    File selectedFile = fileChooser.getSelectedFile();
-		    path = selectedFile.toString();
-		    System.out.println("Selected file: " + path);
-		    ReadCsv readFile= new ReadCsv(path);
-			readFile.read();
+		   selectedFile = fileChooser.getSelectedFiles();
+		    /*for (int i = 0; i < selectedFile.length; i++) {
+				 file = selectedFile[i];
+				 System.out.println("Selected file: " + file.getAbsolutePath());
+			}*/
+		   this.setVisible(false);
+		   EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						MainPage frame = new MainPage(selectedFile);
+						frame.setVisible(true);
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 		}
 	}
-	
 }

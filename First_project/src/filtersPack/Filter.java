@@ -14,17 +14,29 @@ public abstract class Filter {
  * run this function
  * @return String
  * */
-public abstract String filter();
+public abstract boolean filter();
+/*
+ * Exclude filter function
+ * After Building Filter By - object
+ * run this function
+ * @return String
+ * */
+public abstract boolean filterNOT();
 /*
  * comperable function
  * implement by each filter 
  * */
 public abstract boolean comperable();
 /*
- * get function
+ * get database after filter
  * implement by each filter 
  * */
 public abstract List<List<Network>> getFilteredFile();
+/**
+ * get size of database after filter
+ * @return
+ */
+public abstract int getSize();
 }
 
 

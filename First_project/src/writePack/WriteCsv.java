@@ -22,6 +22,7 @@ public class WriteCsv implements Write{
 	 */
 	public WriteCsv(){
 		this._fileTable = null;
+		
 	}
 	
 	/**

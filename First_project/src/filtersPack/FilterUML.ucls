@@ -3,7 +3,7 @@
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
   <class id="1" language="java" name="filtersPack.FilterByDate" project="Ex00" 
     file="/Ex00/src/filtersPack/FilterByDate.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1095" y="182"/>    
+    <position height="-1" width="-1" x="302" y="188"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -12,7 +12,7 @@
   </class>  
   <class id="2" language="java" name="filtersPack.RemoveDuplicate" project="Ex00" 
     file="/Ex00/src/filtersPack/RemoveDuplicate.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1100" y="466"/>    
+    <position height="-1" width="-1" x="307" y="472"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -21,7 +21,7 @@
   </class>  
   <class id="3" language="java" name="filtersPack.FilterByMAC" project="Ex00" 
     file="/Ex00/src/filtersPack/FilterByMAC.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1343" y="648"/>    
+    <position height="-1" width="-1" x="563" y="649"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,7 +30,7 @@
   </class>  
   <class id="4" language="java" name="filtersPack.Filter" project="Ex00" file="/Ex00/src/filtersPack/Filter.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1658" y="394"/>    
+    <position height="-1" width="-1" x="858" y="381"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -39,7 +39,7 @@
   </class>  
   <class id="5" language="java" name="filtersPack.FilterByID" project="Ex00" 
     file="/Ex00/src/filtersPack/FilterByID.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1390" y="127"/>    
+    <position height="-1" width="-1" x="618" y="127"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -48,16 +48,16 @@
   </class>  
   <class id="6" language="java" name="filtersPack.FilterBySignal" project="Ex00" 
     file="/Ex00/src/filtersPack/FilterBySignal.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1684" y="632"/>    
+    <position height="-1" width="-1" x="852" y="655"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="7" language="java" name="filtersPack.FilterByThreeMACs" project="Ex00" 
-    file="/Ex00/src/filtersPack/FilterByThreeMACs.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="2013" y="641"/>    
+  <class id="7" language="java" name="filtersPack.FilterByNumOfMAC" project="Ex00" 
+    file="/Ex00/src/filtersPack/FilterByNumOfMAC.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1196" y="633"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -66,7 +66,7 @@
   </class>  
   <class id="8" language="java" name="filtersPack.FilterAll" project="Ex00" file="/Ex00/src/filtersPack/FilterAll.java" 
     binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1692" y="115"/>    
+    <position height="-1" width="-1" x="861" y="124"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -75,7 +75,7 @@
   </class>  
   <class id="9" language="java" name="filtersPack.FilterBySSID" project="Ex00" 
     file="/Ex00/src/filtersPack/FilterBySSID.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="2305" y="388"/>    
+    <position height="-1" width="-1" x="1520" y="415"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -84,47 +84,52 @@
   </class>  
   <class id="10" language="java" name="filtersPack.FilterByLocation" project="Ex00" 
     file="/Ex00/src/filtersPack/FilterByLocation.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="2023" y="147"/>    
+    <position height="-1" width="-1" x="1232" y="163"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <generalization id="11">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
+  <package id="11" language="java" name="filtersPack" project="Ex00" file="/Ex00/src/filtersPack" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="71" width="123" x="13" y="38"/>    
+    <display autosize="false" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
   <generalization id="12">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <generalization id="13">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="4"/>  
   </generalization>  
-  <generalization id="14">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <generalization id="15">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <generalization id="16">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <generalization id="17">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="4"/>  
-  </generalization>  
-  <generalization id="18">    
+  <generalization id="13">    
     <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="4"/>  
   </generalization>  
-  <generalization id="19">    
+  <generalization id="14">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="15">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="16">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="17">    
     <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="18">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="19">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="20">    
+    <end type="SOURCE" refId="10"/>    
     <end type="TARGET" refId="4"/>  
   </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

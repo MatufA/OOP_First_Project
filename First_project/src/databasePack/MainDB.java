@@ -11,14 +11,17 @@ import java.util.List;
 
 public class MainDB {
 	private List<List<Network>> _database;
+	private int _size;
 
 	public MainDB() {
 		_database = new ArrayList<>();
+		_size=0;
 	}
 	
 	public MainDB(List<List<Network>> database) {
 		this._database = new ArrayList<>();
 		this._database.addAll(database);
+		_size=0;
 		removeEmpty();
 		sort();
 	}
@@ -50,7 +53,6 @@ public class MainDB {
 	public void remove(int i) {
 		if(!isEmpty()) {
 			_database.remove(i);
-	
 		}
 	}
 	
@@ -79,6 +81,7 @@ public class MainDB {
 		if(!isEmpty()) {
 			for (List<Network> list : _database) {
 				if(list.isEmpty()) _database.remove(list);
+				else _size += list.size();
 			}
 		}
 	}
@@ -108,6 +111,10 @@ public class MainDB {
 	
 	public boolean isEmpty() {
 		return _database.isEmpty();
+	}
+
+	public int get_size() {
+		return _size;
 	}
 	
 }

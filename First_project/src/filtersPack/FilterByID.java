@@ -30,7 +30,7 @@ public class FilterByID extends Filter{
 	 *@return String (Succed of Fail)
 	 */
 	@Override
-	public String filter() {
+	public boolean filter() {
 		List<Network> tempList;
 		if(!this.file.isEmpty()) {
 			for (List<Network> runList: this.file) {
@@ -48,11 +48,40 @@ public class FilterByID extends Filter{
 					}
 				}	
 			}
-			return "Filtered Succeed!";
+			return true;
 		}else {
-			return "Database is empty!";
+			return false;
 			}
 	}
+	/*
+	 *After constract Filter by ID, run filter function 
+	 *@return String (Succed of Fail)
+	 */
+	@Override
+	public boolean filterNOT() {
+		List<Network> tempList;
+		if(!this.file.isEmpty()) {
+			for (List<Network> runList: this.file) {
+				if(runList.size() >= 1) {
+					tempList = new ArrayList<>();
+					for (Network network : runList) {
+						wifiSpot = new Network(network);
+						if(!comperable()) {
+							tempList.add(network);
+						}
+					}
+					if(tempList.size() >=1) {
+						size += tempList.size();
+						this.filteredFile.add(tempList);
+					}
+				}	
+			}
+			return true;
+		}else {
+			return false;
+			}
+	}
+	
 	/*
 	 *Comperable type
 	 *If the ID of the object is equal to
@@ -74,6 +103,7 @@ public class FilterByID extends Filter{
 		return this.filteredFile;
 	}
 	/*Gets number of elements after filter*/
+	@Override
 	public int getSize() {
 		return size;
 	}

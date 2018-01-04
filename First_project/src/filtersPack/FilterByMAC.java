@@ -31,7 +31,7 @@ public class FilterByMAC extends Filter{
 	 *@return String (Succed of Fail)
 	 */
 	@Override
-	public String filter() {
+	public boolean filter() {
 		List<Network> tempList;
 		if(!this.file.isEmpty()) {
 			for (List<Network> runList: this.file) {
@@ -49,9 +49,37 @@ public class FilterByMAC extends Filter{
 					}
 				}	
 			}
-			return "MAC Filtered Succeed!";
+			return true;
 		}else {
-			return "MAC Filtered - Database is empty!";
+			return false;
+			}
+	}
+	/*
+	 *After constract Filter by MAC, run filterNOT for exclude
+	 *@return String (Succed of Fail)
+	 */
+	@Override
+	public boolean filterNOT() {
+		List<Network> tempList;
+		if(!this.file.isEmpty()) {
+			for (List<Network> runList: this.file) {
+				if(runList.size() >= 1) {
+					tempList = new ArrayList<>();
+					for (Network network : runList) {
+						wifiSpot = new Network(network);
+						if(!comperable()) {
+							tempList.add(wifiSpot);
+						}
+					}
+					if(tempList.size() >=1) {
+						size += tempList.size();
+						this.filteredFile.add(tempList);
+					}
+				}	
+			}
+			return true;
+		}else {
+			return false;
 			}
 	}
 	/*
@@ -75,6 +103,7 @@ public class FilterByMAC extends Filter{
 		return this.filteredFile;
 	}
 	/*Gets number of elements after filter*/
+	@Override
 	public int getSize() {
 		return size;
 	}
