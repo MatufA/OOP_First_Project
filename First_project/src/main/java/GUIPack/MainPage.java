@@ -19,6 +19,7 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
 import main.java.readPack.ReadCsv;
+import main.java.writePack.WriteCsv;
 
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -31,6 +32,8 @@ import main.java.databasePack.MainDB;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.border.LineBorder;
@@ -47,6 +50,14 @@ import javax.swing.JLayeredPane;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JToggleButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
 
 public class MainPage extends JFrame {
 
@@ -61,7 +72,7 @@ public class MainPage extends JFrame {
 	
 	private final JFXPanel jfxPanel = new JFXPanel();
 	private static HashMap<File, FileTime> files = new HashMap<>();
-	private MainDB database = new MainDB();
+	private MainDB database = new MainDB(), filterDB = new MainDB();
 	
 	private JTextField txtDatabase;
 	private JTextField textFilter;
@@ -72,10 +83,11 @@ public class MainPage extends JFrame {
 	private JLayeredPane filterDisplay;
 	private JLabel userIcon;
 	private JLabel modemIcon;
-	private JLabel label_1;
 	private JLabel infoIcon;
 	private static File[] selectedFile;
 	private JPanel upload;
+	private JLayeredPane infoDisplay;
+	private JPopupMenu csvPick;
 	/**
 	 * Launch the application.
 	 */
@@ -112,12 +124,14 @@ public class MainPage extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		
+		
+		
 		JPanel upperbar = new JPanel();
 		upperbar.setBorder(new LineBorder(new Color(0, 0, 0)));
 		upperbar.setBackground(UIManager.getColor("activeCaption"));
 		upperbar.setBounds(52, 0, 754, 71);
 		contentPane.add(upperbar);
-		upperbar.setLayout(null);
 		
 		upload = new JPanel();
 		upload.setBounds(100, 100, 630, 421);
@@ -125,18 +139,27 @@ public class MainPage extends JFrame {
 		
 		layeredPane = new JLayeredPane();
 		layeredPane.setBackground(SystemColor.activeCaption);
-		layeredPane.setBounds(2, 1, 773, 70);
-		upperbar.add(layeredPane);
+		
+		txtDatabase = new JTextField();
+		txtDatabase.setBounds(0, 0, 92, 65);
+		txtDatabase.setHorizontalAlignment(SwingConstants.CENTER);
+		txtDatabase.setBackground(SystemColor.activeCaption);
+		txtDatabase.setFont(new Font("Calibri Light", Font.PLAIN, 12));
+		txtDatabase.setDropMode(DropMode.INSERT);
+		txtDatabase.setEditable(false);
+		txtDatabase.setText("Database: " + this.database.get_size());
 		
 		textFilter = new JTextField();
+		textFilter.setBounds(98, 0, 103, 65);
+		textFilter.setHorizontalAlignment(SwingConstants.CENTER);
 		textFilter.setBackground(SystemColor.activeCaption);
 		textFilter.setText("filter: 0");
 		textFilter.setFont(new Font("Calibri Light", Font.PLAIN, 12));
 		textFilter.setEditable(false);
 		textFilter.setDropMode(DropMode.INSERT);
-		textFilter.setColumns(1);
 		
 		logoff = new JLabel("");
+		logoff.setBounds(691, 19, 32, 32);
 		logoff.setForeground(SystemColor.inactiveCaption);
 		logoff.setBackground(SystemColor.window);
 		logoff.addMouseListener(new MouseAdapter() {
@@ -148,45 +171,22 @@ public class MainPage extends JFrame {
 		logoff.setLabelFor(upperbar);
 		logoff.setHorizontalAlignment(SwingConstants.LEFT);
 		logoff.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Logout Rounded Up_32px.png")));
-		
-		txtDatabase = new JTextField();
-		txtDatabase.setBackground(SystemColor.activeCaption);
-		txtDatabase.setFont(new Font("Calibri Light", Font.PLAIN, 12));
-		txtDatabase.setDropMode(DropMode.INSERT);
-		txtDatabase.setEditable(false);
-		txtDatabase.setText("Database: " + this.database.get_size());
-		
-		label_1 = new JLabel("");
-		GroupLayout gl_layeredPane = new GroupLayout(layeredPane);
-		gl_layeredPane.setHorizontalGroup(
-			gl_layeredPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_layeredPane.createSequentialGroup()
-					.addGroup(gl_layeredPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtDatabase, GroupLayout.PREFERRED_SIZE, 88, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_layeredPane.createSequentialGroup()
-							.addGap(86)
-							.addComponent(textFilter, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 511, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(logoff, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
-					.addGap(44))
+		layeredPane.setLayout(null);
+		layeredPane.add(txtDatabase);
+		layeredPane.add(textFilter);
+		layeredPane.add(logoff);
+		GroupLayout gl_upperbar = new GroupLayout(upperbar);
+		gl_upperbar.setHorizontalGroup(
+			gl_upperbar.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_upperbar.createSequentialGroup()
+					.addGap(1)
+					.addComponent(layeredPane, GroupLayout.PREFERRED_SIZE, 742, GroupLayout.PREFERRED_SIZE))
 		);
-		gl_layeredPane.setVerticalGroup(
-			gl_layeredPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_layeredPane.createSequentialGroup()
-					.addGroup(gl_layeredPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_layeredPane.createSequentialGroup()
-							.addGap(1)
-							.addComponent(txtDatabase, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE))
-						.addComponent(textFilter, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_layeredPane.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(logoff, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
-						.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		gl_upperbar.setVerticalGroup(
+			gl_upperbar.createParallelGroup(Alignment.LEADING)
+				.addComponent(layeredPane, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
 		);
-		layeredPane.setLayout(gl_layeredPane);
+		upperbar.setLayout(gl_upperbar);
 		
 		display = new JPanel();
 		display.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -210,6 +210,21 @@ public class MainPage extends JFrame {
 		
 		filterDisplay = new JLayeredPane();
 		display.add(filterDisplay, "name_353859816218952");
+		
+		infoDisplay = new JLayeredPane();
+		infoDisplay.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				display.removeAll();
+				display.repaint();
+				display.revalidate();
+				
+				display.add(infoDisplay);
+				display.repaint();
+				display.revalidate();
+			}
+		});
+		display.add(infoDisplay, "name_366413875173549");
 		
 		JPanel controlPanel = new JPanel();
 		controlPanel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -238,8 +253,14 @@ public class MainPage extends JFrame {
 		filterIcon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				display.setVisible(false);
-				mapDisplay.setVisible(true);
+				display.removeAll();
+				display.repaint();
+				display.revalidate();
+				
+				display.add(filterDisplay);
+				display.repaint();
+				display.revalidate();
+				
 			}
 		});
 		filterIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/filter_32px.png")));
@@ -250,9 +271,13 @@ public class MainPage extends JFrame {
 		mapIcon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				mapDisplay.setVisible(false);
-				display.setVisible(true);
-				googleMaps();
+				display.removeAll();
+				display.repaint();
+				display.revalidate();
+				
+				display.add(mapDisplay);
+				display.repaint();
+				display.revalidate();
 				
 			}
 		});
@@ -263,23 +288,68 @@ public class MainPage extends JFrame {
 		tableIcon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				display.setVisible(false);
-				mapDisplay.setVisible(true);
+				display.removeAll();
+				display.repaint();
+				display.revalidate();
+				
+				display.add(tableDisplay);
+				display.repaint();
+				display.revalidate();
+	
+				String table = "csv_table";
+				Table window = new Table(table);
+				window.setVisible(true);
+				window.setSize(770,440);
 			}
 		});
 		tableIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Bulleted List_32px.png")));
 		tableIcon.setForeground(new Color(248, 248, 255));
 		
 		JLabel csvButton = new JLabel("");
+		csvButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				csvPick.setVisible(true);
+			}
+		});
 		csvButton.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/CSV_32px.png")));
 		
 		JLabel kmlIcon = new JLabel("");
+		kmlIcon.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			}
+		});
 		kmlIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/KML_32px.png")));
 		
 		userIcon = new JLabel("");
+		userIcon.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				display.removeAll();
+				display.repaint();
+				display.revalidate();
+				
+				display.add(userLocationDisplay);
+				display.repaint();
+				display.revalidate();
+			}
+		});
 		userIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Location_50px.png")));
 		
 		modemIcon = new JLabel("");
+		modemIcon.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				display.removeAll();
+				display.repaint();
+				display.revalidate();
+				
+				display.add(modemLocationDisplay);
+				display.repaint();
+				display.revalidate();
+			}
+		});
 		modemIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Wi-Fi Router_50px.png")));
 		
 		infoIcon = new JLabel("");
@@ -288,33 +358,32 @@ public class MainPage extends JFrame {
 		gl_controlPanel.setHorizontalGroup(
 			gl_controlPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_controlPanel.createSequentialGroup()
-					.addGroup(gl_controlPanel.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_controlPanel.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(kmlIcon))
-						.addGroup(gl_controlPanel.createParallelGroup(Alignment.LEADING)
-							.addGroup(gl_controlPanel.createSequentialGroup()
-								.addGap(17)
-								.addComponent(csvButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
-							.addGroup(gl_controlPanel.createSequentialGroup()
-								.addGap(20)
-								.addGroup(gl_controlPanel.createParallelGroup(Alignment.LEADING)
-									.addComponent(filterIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-									.addComponent(mapIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-									.addComponent(tableIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-									.addComponent(addIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-					.addGap(18))
-				.addGroup(gl_controlPanel.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(userIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addContainerGap())
 				.addGroup(gl_controlPanel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_controlPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(modemIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 						.addGroup(gl_controlPanel.createSequentialGroup()
 							.addGap(10)
-							.addComponent(infoIcon))
-						.addComponent(modemIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+							.addComponent(infoIcon)))
+					.addContainerGap())
+				.addGroup(gl_controlPanel.createSequentialGroup()
+					.addGap(20)
+					.addGroup(gl_controlPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(filterIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(mapIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(tableIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(addIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addGap(18))
+				.addGroup(gl_controlPanel.createSequentialGroup()
+					.addGap(18)
+					.addComponent(kmlIcon)
+					.addContainerGap(20, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_controlPanel.createSequentialGroup()
+					.addGap(18)
+					.addComponent(csvButton, GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
 					.addContainerGap())
 		);
 		gl_controlPanel.setVerticalGroup(
@@ -340,8 +409,60 @@ public class MainPage extends JFrame {
 					.addComponent(infoIcon)
 					.addGap(111))
 		);
+		
+		csvPick = new JPopupMenu();
+		
+		
 		controlPanel.setLayout(gl_controlPanel);
 		
+		JMenuItem mainDatabase = new JMenuItem("Main Database");
+		JMenuItem filterDatabase = new JMenuItem("Filtered Database");
+		
+		class maindata implements ActionListener{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// parent component of the dialog
+				JFrame parentFrame = new JFrame();
+				 
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setDialogTitle("Specify a file to save");   
+				 
+				int userSelection = fileChooser.showSaveDialog(parentFrame);
+				 
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+				    File fileToSave = fileChooser.getSelectedFile();
+				    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+				    WriteCsv write = new WriteCsv(database.getdatabase() ,fileToSave.getAbsolutePath());
+				    if(!database.isEmpty()) write.write();
+				}
+			}
+		}
+		mainDatabase.addActionListener(new maindata());
+		
+		class filterdata implements ActionListener{
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// parent component of the dialog
+				JFrame parentFrame = new JFrame();
+				 
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setDialogTitle("Specify a file to save");   
+				 
+				int userSelection = fileChooser.showSaveDialog(parentFrame);
+				 
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+				    File fileToSave = fileChooser.getSelectedFile();
+				    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+				    WriteCsv write = new WriteCsv(filterDB.getdatabase() ,fileToSave.getAbsolutePath());
+					if(!filterDB.isEmpty())write.write();
+				}
+			}
+		}
+		filterDatabase.addActionListener(new filterdata());
+		
+		csvPick.add(mainDatabase);
+		csvPick.add(filterDatabase);
+		addPopup(csvButton, csvPick);
 	}
 	
 	private void googleMaps() {
@@ -393,5 +514,22 @@ public class MainPage extends JFrame {
 		if (result == JFileChooser.APPROVE_OPTION) {
 			selectedFile = fileChooser.getSelectedFiles();
 		  	}
+	}
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
 	}
 }

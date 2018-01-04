@@ -2,6 +2,8 @@ package main.java.writePack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import de.micromata.opengis.kml.v_2_2_0.Placemark;
  */
 public class WriteKml implements Write{
 	List<List<Network>> listOfNet;
+	String path;
 	/**
 	 * Instantiates a new write kml.
 	 */
@@ -33,7 +36,23 @@ public class WriteKml implements Write{
 	 */
 	public WriteKml(List<List<Network>> kmlList){
 		this.listOfNet = kmlList;
+		Date timeDate = new Date();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		this.path="KmlFile - " + df.format(timeDate.getTime()) + ".kml";
 	}
+	/**
+	 * Instantiates a new write kml.
+	 *
+	 * @author adiel ,adi and yuda
+	 * @param kmlList the kml list
+	 * @param keyIndex 
+	 * {@link https://labs.micromata.de/projects/jak/kml-in-the-java-world.html}
+	 */
+	public WriteKml(List<List<Network>> kmlList,String path){
+		this.listOfNet = kmlList;
+		this.path=path;
+	}
+	
 	/*Convert date from String to TimeStame Signature
 	 * @param String time
 	 * @return String 
@@ -48,9 +67,8 @@ public class WriteKml implements Write{
 	/*Implement Write class
 	 * */
 	@Override
-	public String write() {
+	public boolean write() {
 		try {
-			Date timeDate = new Date();
 			final Kml writekml = new Kml();
 			Document document = writekml.createAndSetDocument();
 			for (List<Network> list : listOfNet) {	
@@ -67,10 +85,11 @@ public class WriteKml implements Write{
 	
 				}
 			}
-			writekml.marshal(new File("KmlFile - " + timeDate.getTime() + ".kml"));
-			return "Kml created!!";
+			writekml.marshal(new File(this.path));
+			return true;
 		} catch (FileNotFoundException | NullPointerException e) {
-			return e.getMessage();
+			e.printStackTrace();
+			return false;
 		}
 	}
 }

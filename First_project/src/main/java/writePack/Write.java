@@ -3,5 +3,5 @@ package main.java.writePack;
  * Every write function in this project most implement write function
  * */
 public interface Write {
-	public String write();
+	public boolean write();
 }

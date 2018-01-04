@@ -117,4 +117,8 @@ public class MainDB {
 		return _size;
 	}
 	
+	public List<List<Network>> getdatabase() {
+		return this._database;
+	}
+	
 }

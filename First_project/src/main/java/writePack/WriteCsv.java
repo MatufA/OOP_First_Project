@@ -3,6 +3,8 @@ package main.java.writePack;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +17,7 @@ import main.java.databasePack.Network;
 public class WriteCsv implements Write{
 	/** The file table. */
 	private List<List<Network>> _fileTable;
+	String path;
 	/**
 	 * Instantiates a new write csv.
 	 *
@@ -34,13 +37,28 @@ public class WriteCsv implements Write{
 	 */
 	public WriteCsv(List<List<Network>> csvList) throws IndexOutOfBoundsException  {
 		this._fileTable = csvList;
+		Date date = new Date();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		path = "final_csv - " + df.format(date.getTime()) +".csv";
+	}
+	
+	/**
+	 * Instantiates a new write csv.
+	 *
+	 * @author adiel ,adi and yuda
+	 * @param csvList the csv list
+	 * @throws IndexOutOfBoundsException the index out of bounds exception
+	 */
+	public WriteCsv(List<List<Network>> csvList, String path) throws IndexOutOfBoundsException  {
+		this._fileTable = csvList;
+		this.path = path;
 	}
 	
 	@Override
-	public String write() {
+	public boolean write() {
 		try {
-			Date date = new Date();
-			BufferedWriter makeFile = new BufferedWriter(new FileWriter("final_csv - " + date.getTime() +".csv"));
+			
+			BufferedWriter makeFile = new BufferedWriter(new FileWriter(path));
 			String [] firstHeader = {"Time", "ID", "Lat", "Lon", "Alt", "WiFi networks"},
 					secondHeader = {"SSID", "MAC", "Frequncy", "Signal"};
 			//First required titles
@@ -70,16 +88,16 @@ public class WriteCsv implements Write{
 				}
 				//close session
 				makeFile.close();
-				return "Csv created successfully!";
+				return true;
 				}else {
 					//close session
 					makeFile.close();
-					return "Database is empty!";
+					return false;
 				}
 			
 		}catch(IndexOutOfBoundsException | IOException | NullPointerException e) {
 			e.printStackTrace();
-			return "Sorry, somethings went wrong! \nPlease check if your file is corrupted";
+			return false;
 		}
 	}
 	/*Get list of csv file*/

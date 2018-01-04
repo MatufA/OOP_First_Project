@@ -3,6 +3,8 @@ package main.java.writePack;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,16 +15,27 @@ public class WriteCsvEachLine implements Write{
 
 	private List<List<Network>> database;
 	private int size;
+	String path;
+	
 	public WriteCsvEachLine(List<List<Network>> data) {
 		database = new ArrayList<>();
 		this.database.addAll(data);
+		Date date = new Date();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		path = "Test\\output\\final_csv - " + df.format(date.getTime()) +".csv";
+	}
+	
+	public WriteCsvEachLine(List<List<Network>> data, String path) {
+		database = new ArrayList<>();
+		this.database.addAll(data);
+		this.path = path;
 	}
 
 	@Override
-	public String write() {
+	public boolean write() {
 		try {
-			Date date = new Date();
-			BufferedWriter makeFile = new BufferedWriter(new FileWriter("Test\\output\\final_csv - " + date.getTime() +".csv"));
+			
+			BufferedWriter makeFile = new BufferedWriter(new FileWriter(this.path));
 			
 			for (List<Network> list : database) {
 				for (Network network : list) {
@@ -37,10 +50,10 @@ public class WriteCsvEachLine implements Write{
 				}
 			}
 			makeFile.close();
-			return "Write Csv successfully!";
+			return true;
 		} catch (IOException e) {
 			e.getStackTrace();
-			return "Error While writing!";
+			return false;
 		}
 	}
 
