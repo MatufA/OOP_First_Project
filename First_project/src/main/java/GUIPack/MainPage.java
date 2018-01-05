@@ -1,7 +1,6 @@
 package main.java.GUIPack;
 
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.web.WebView;
 import main.java.readPack.ReadCsv;
 import main.java.writePack.WriteCsv;
+import main.java.writePack.WriteKml;
 
 import java.awt.Color;
 import java.awt.BorderLayout;
@@ -34,6 +34,7 @@ import main.java.databasePack.MainDB;
 import main.java.databasePack.Network;
 
 import javax.swing.ImageIcon;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionEvent;
@@ -41,8 +42,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.border.LineBorder;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.Toolkit;
@@ -55,9 +56,8 @@ import java.awt.SystemColor;
 import javax.swing.JLayeredPane;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JToggleButton;
-import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -79,7 +79,8 @@ public class MainPage extends JFrame {
 	private final JFXPanel jfxPanel = new JFXPanel();
 	private static HashMap<File, FileTime> files = new HashMap<>();
 	private MainDB database = new MainDB(), filterDB = new MainDB();
-
+	private JScrollPane scrollmap;
+	private JScrollPane scrolltable;
 	private JTextField txtDatabase;
 	private JTextField textFilter;
 	private JLabel logoff;
@@ -93,13 +94,13 @@ public class MainPage extends JFrame {
 	private static File[] selectedFile;
 	private JPanel upload;
 	private JLayeredPane infoDisplay;
-	private JPopupMenu csvPick;
 	private JTextField txtfilter;
 	private JToggleButton tglbtnFilterByMac;
 	private JToggleButton tglbtnFilterByTime;
 	private JToggleButton tglbtnFilterByLocation;
 	private JToggleButton tglbtnFilterById;
 	private JTextField choosemac;
+	private JEditorPane view;
 	/**
 	 * Launch the application.
 	 */
@@ -124,7 +125,8 @@ public class MainPage extends JFrame {
 	 */
 	public MainPage(File[] selectedFile) throws IOException {
 		setResizable(false);
-		checkModifiedTime(selectedFile);
+		MainPage.selectedFile = selectedFile;
+		checkModifiedTime(MainPage.selectedFile);
 		setTitle("GEO-App");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MainPage.class.getResource("/main/java/GUIPack/images/app-earth-icon.png")));
 		setBackground(Color.WHITE);
@@ -144,6 +146,7 @@ public class MainPage extends JFrame {
 		contentPane.add(controlPanel);
 
 		addIcon = DefaultComponentFactory.getInstance().createLabel("");
+		addIcon.setBounds(19, 6, 32, 32);
 		addIcon.setLabelFor(controlPanel);
 		addIcon.addMouseListener(new MouseAdapter() {
 			@Override
@@ -159,11 +162,23 @@ public class MainPage extends JFrame {
 		addIcon.setForeground(new Color(248, 248, 255));
 
 		filterIcon = DefaultComponentFactory.getInstance().createLabel("");
+		filterIcon.setBounds(19, 49, 32, 32);
 		filterIcon.setLabelFor(controlPanel);
 		filterIcon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				contentPane.add(filterDisplay);
+				display.removeAll();
+				display.repaint();
+				display.revalidate();
+				
+				display.add(filterDisplay,BorderLayout.SOUTH);
+				display.repaint();
+				display.add(filterDisplay, BorderLayout.CENTER);
+				
+				contentPane.remove(display);
+				contentPane.repaint();
+				contentPane.revalidate();
+				contentPane.add(filterDisplay,BorderLayout.SOUTH);
 				filterDisplay.setVisible(true);
 			}
 		});
@@ -171,17 +186,25 @@ public class MainPage extends JFrame {
 		filterIcon.setForeground(new Color(248, 248, 255));
 
 		mapIcon = DefaultComponentFactory.getInstance().createLabel("");
+		mapIcon.setBounds(20, 166, 32, 32);
 		mapIcon.setLabelFor(controlPanel);
 		mapIcon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				filterDisplay.setVisible(false);
+				googleMaps();
 				display.removeAll();
 				display.repaint();
 				display.revalidate();
-
+				
 				display.add(mapDisplay);
 				display.repaint();
-				display.revalidate();
+				display.add(mapDisplay);
+				
+				contentPane.remove(display);
+				contentPane.repaint();
+				contentPane.revalidate();
+				
 				contentPane.add(mapDisplay);
 				mapDisplay.setVisible(true);
 
@@ -190,21 +213,32 @@ public class MainPage extends JFrame {
 		mapIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Globe_32px.png")));
 
 		tableIcon = DefaultComponentFactory.getInstance().createLabel("");
+		tableIcon.setBounds(20, 209, 32, 32);
 		tableIcon.setLabelFor(controlPanel);
 		tableDisplay = new JLayeredPane();
 		String[] columnNames = {"Time","ID","MAC","SSID","Latitude",
 				"Longitude","Altitude","Frequncy","Signal"};		
 		Object [][] data = new Object[database.get_size()][9];
-		tableDisplay.setBounds(0, 0, 752, 431);
 		
 		tableIcon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				display.removeAll();
+				display.repaint();
+				display.revalidate();
 				
+				display.add(scrollmap);
+				display.repaint();
+				display.add(scrollmap);
 				
+				contentPane.remove(display);
+				contentPane.repaint();
+				contentPane.revalidate();
+				contentPane.add(scrollmap);
+				filterDisplay.setVisible(true);
 				
 				if(!database.isEmpty()) {
-					
+					Object [][] data = new Object[database.get_size()][9];
 					int count = 0;
 					List<List<Network>> temp = new ArrayList<>(database.getdatabase()); 
 					for (List<Network> list : temp) {
@@ -222,13 +256,13 @@ public class MainPage extends JFrame {
 						}
 						
 					}
-
-					table = new JTable(data, columnNames);
+					tableDisplay.setBounds(0, 0, 752, 431);
+					table = new JTable(null, columnNames);
 					table.setPreferredScrollableViewportSize(new Dimension(736, 372));
 					table.setFillsViewportHeight(true);
 
-					JScrollPane scrollpane = new JScrollPane(table);
-					getContentPane().add(scrollpane);
+					scrolltable = new JScrollPane(table);
+					getContentPane().add(scrolltable);
 					tableDisplay.add(table);
 					tableDisplay.setBounds(0, 0, 752, 431);
 					
@@ -237,35 +271,135 @@ public class MainPage extends JFrame {
 					display.setVisible(true);
 				}
 
-				display.add(tableDisplay);
+				/*display.add(tableDisplay);
 				display.repaint();
 				display.revalidate();
 
 				contentPane.add(tableDisplay);
-				tableDisplay.setVisible(true);
+				tableDisplay.setVisible(true);*/
 			}
 		});
 		tableIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Bulleted List_32px.png")));
 		tableIcon.setForeground(new Color(248, 248, 255));
 
 		JLabel csvButton = new JLabel("");
+		csvButton.setBounds(19, 84, 32, 32);
 		csvButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				csvPick.setVisible(true);
-			}
+				//Custom button text
+				Object[] options = {"Main Database",
+				                    "Filtered database",
+				                    "Exit"};
+				int choose = JOptionPane.showOptionDialog(contentPane,
+				    "Would you like export Main or Filtered database?",
+				    "Export",
+				    JOptionPane.YES_NO_CANCEL_OPTION,
+				    JOptionPane.QUESTION_MESSAGE,
+				    null,
+				    options,
+				    options[2]);
+				
+					switch (choose) {
+					case 0:
+						// parent component of the dialog
+						JFrame parentFrame = new JFrame();
+						JFileChooser fileChooser = new JFileChooser();
+						fileChooser.setDialogTitle("Specify a file to save");   
+						int userSelection = fileChooser.showSaveDialog(parentFrame);
+						if (userSelection == JFileChooser.APPROVE_OPTION) {
+							File fileToSave = fileChooser.getSelectedFile();
+							String path = fileToSave.getAbsolutePath();
+							if(!path.substring(path.length()-4, path.length()).equalsIgnoreCase(".csv")) path += ".csv";
+							System.out.println("Save as file: " + path);
+							WriteCsv write = new WriteCsv(database.getdatabase() ,path);
+							if(!database.isEmpty()) write.write();
+						}
+						break;
+					case 1:
+						// parent component of the dialog
+						parentFrame = new JFrame();
+						JFileChooser fc = new JFileChooser();
+						fc.setDialogTitle("Specify a file to save");   
+						userSelection = fc.showSaveDialog(parentFrame);
+						if (userSelection == JFileChooser.APPROVE_OPTION) {
+							File fileToSave = fc.getSelectedFile();
+							String path = fileToSave.getAbsolutePath();
+							System.out.println("Save as file: " + path);
+							if(path.substring(path.length()-4).equalsIgnoreCase(".csv")) path += ".csv";
+							WriteCsv write = new WriteCsv(filterDB.getdatabase() ,path);
+							if(!filterDB.isEmpty()) write.write();
+						}
+						break;
+					default:
+						break;
+					}
+				}
 		});
 		csvButton.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/CSV_32px.png")));
 
 		JLabel kmlIcon = new JLabel("");
+		kmlIcon.setBounds(19, 123, 32, 32);
 		kmlIcon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-			}
+				//Custom button text
+				Object[] options = {"Main Database",
+				                    "Filtered database",
+				                    "Exit"};
+				int choose = JOptionPane.showOptionDialog(contentPane,
+				    "Would you like export Main or Filtered database?",
+				    "Export",
+				    JOptionPane.YES_NO_CANCEL_OPTION,
+				    JOptionPane.QUESTION_MESSAGE,
+				    null,
+				    options,
+				    options[2]);
+				
+					switch (choose) {
+					case 0:
+						// parent component of the dialog
+						JFrame parentFrame = new JFrame();
+
+						JFileChooser fileChooser = new JFileChooser();
+						fileChooser.setDialogTitle("Specify a file to save");   
+						int userSelection = fileChooser.showSaveDialog(parentFrame);
+						if (userSelection == JFileChooser.APPROVE_OPTION) {
+							File fileToSave = fileChooser.getSelectedFile();
+							String path = fileToSave.getAbsolutePath();
+							if(!path.substring(path.length()-4, path.length()).equalsIgnoreCase(".kml")) path += ".kml";
+							System.out.println("Save as file: " + path);
+							WriteKml write = new WriteKml(database.getdatabase() ,path);
+							if(!database.isEmpty()) write.write();
+						}
+						break;
+					case 1:
+						// parent component of the dialog
+						parentFrame = new JFrame();
+
+						JFileChooser fc = new JFileChooser();
+						fc.setDialogTitle("Specify a file to save");   
+
+						userSelection = fc.showSaveDialog(parentFrame);
+
+						if (userSelection == JFileChooser.APPROVE_OPTION) {
+							File fileToSave = fc.getSelectedFile();
+							String path = fileToSave.getAbsolutePath();
+							if(path.substring(path.length()-4).equalsIgnoreCase(".kml")) path += ".kml";
+							System.out.println("Save as file: " + path);
+							WriteKml write = new WriteKml(filterDB.getdatabase() ,path);
+							if(!filterDB.isEmpty()) write.write();
+						}
+						break;
+					default:
+						break;
+					}
+				}
 		});
 		kmlIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/KML_32px.png")));
 
 		userIcon = new JLabel("");
+		userIcon.setBounds(10, 307, 50, 50);
 		userIcon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -284,6 +418,7 @@ public class MainPage extends JFrame {
 		userIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Location_50px.png")));
 
 		modemIcon = new JLabel("");
+		modemIcon.setBounds(10, 246, 50, 50);
 		modemIcon.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -302,145 +437,18 @@ public class MainPage extends JFrame {
 		modemIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Wi-Fi Router_50px.png")));
 
 		infoIcon = new JLabel("");
+		infoIcon.setBounds(19, 368, 32, 32);
 		infoIcon.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Info_32px.png")));
-		GroupLayout gl_controlPanel = new GroupLayout(controlPanel);
-		gl_controlPanel.setHorizontalGroup(
-				gl_controlPanel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_controlPanel.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(userIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addContainerGap())
-				.addGroup(gl_controlPanel.createSequentialGroup()
-						.addContainerGap()
-						.addGroup(gl_controlPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(modemIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addGroup(gl_controlPanel.createSequentialGroup()
-										.addGap(10)
-										.addComponent(infoIcon)))
-						.addContainerGap())
-				.addGroup(gl_controlPanel.createSequentialGroup()
-						.addGap(20)
-						.addGroup(gl_controlPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(filterIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(mapIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(tableIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(addIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						.addGap(18))
-				.addGroup(gl_controlPanel.createSequentialGroup()
-						.addGap(18)
-						.addComponent(kmlIcon)
-						.addContainerGap(20, Short.MAX_VALUE))
-				.addGroup(gl_controlPanel.createSequentialGroup()
-						.addGap(18)
-						.addComponent(csvButton, GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
-						.addContainerGap())
-				);
-		gl_controlPanel.setVerticalGroup(
-				gl_controlPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_controlPanel.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(addIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addGap(11)
-						.addComponent(filterIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(mapIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addGap(5)
-						.addComponent(tableIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(csvButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(kmlIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(userIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(modemIcon, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(infoIcon)
-						.addGap(111))
-				);
-
-		csvPick = new JPopupMenu();
-		controlPanel.setLayout(gl_controlPanel);
-
-		JMenuItem mainDatabase = new JMenuItem("Main Database");
-		mainDatabase.setHorizontalAlignment(SwingConstants.CENTER);
-		mainDatabase.setSelected(true);
-		JMenuItem filterDatabase = new JMenuItem("Filtered Database");
-		filterDatabase.setHorizontalAlignment(SwingConstants.CENTER);
-		filterDatabase.setSelected(true);
-
-		class maindata implements ActionListener{
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// parent component of the dialog
-				JFrame parentFrame = new JFrame();
-
-				JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setDialogTitle("Specify a file to save");   
-
-				int userSelection = fileChooser.showSaveDialog(parentFrame);
-
-				if (userSelection == JFileChooser.APPROVE_OPTION) {
-					File fileToSave = fileChooser.getSelectedFile();
-					System.out.println("Save as file: " + fileToSave.getAbsolutePath());
-					WriteCsv write = new WriteCsv(database.getdatabase() ,fileToSave.getAbsolutePath());
-					if(!database.isEmpty()) write.write();
-				}
-			}
-		}
-
-		class filterdata implements ActionListener, PopupMenuListener{
-			@Override
-			public void popupMenuCanceled(PopupMenuEvent arg0) {
-				csvPick.setVisible(false);
-
-			}
-
-			@Override
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
-				// parent component of the dialog
-				JFrame parentFrame = new JFrame();
-
-				JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setDialogTitle("Specify a file to save");   
-
-				int userSelection = fileChooser.showSaveDialog(parentFrame);
-
-				if (userSelection == JFileChooser.APPROVE_OPTION) {
-					File fileToSave = fileChooser.getSelectedFile();
-					System.out.println("Save as file: " + fileToSave.getAbsolutePath());
-					WriteCsv write = new WriteCsv(filterDB.getdatabase() ,fileToSave.getAbsolutePath());
-					if(!filterDB.isEmpty())write.write();
-					csvPick.setVisible(false);
-				}else if(userSelection == JFileChooser.CANCEL_OPTION) {
-					csvPick.setVisible(false);
-				}
-
-			}
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-		}
-
-		mainDatabase.addActionListener(new maindata());
-		filterDatabase.addActionListener( new filterdata());
-
-
-		csvPick.add(mainDatabase);
-		csvPick.add(filterDatabase);
-		addPopup(csvButton, csvPick);
-
-
-
+		controlPanel.setLayout(null);
+		controlPanel.add(userIcon);
+		controlPanel.add(modemIcon);
+		controlPanel.add(infoIcon);
+		controlPanel.add(filterIcon);
+		controlPanel.add(mapIcon);
+		controlPanel.add(tableIcon);
+		controlPanel.add(addIcon);
+		controlPanel.add(kmlIcon);
+		controlPanel.add(csvButton);
 
 		JPanel upperbar = new JPanel();
 		upperbar.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -480,9 +488,17 @@ public class MainPage extends JFrame {
 		logoff.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				System.exit(0);
-			}
-		});
+						int yesOrNo = JOptionPane.showConfirmDialog(null, "Do you want to close the application?", "Exit" ,JOptionPane.YES_NO_OPTION);
+						switch (yesOrNo) {
+						case 0:
+							System.exit(0);
+							break;
+
+						default:
+							break;
+						}
+					}
+				});
 		logoff.setLabelFor(upperbar);
 		logoff.setHorizontalAlignment(SwingConstants.LEFT);
 		logoff.setIcon(new ImageIcon(MainPage.class.getResource("/main/java/GUIPack/images/Logout Rounded Up_32px.png")));
@@ -525,7 +541,7 @@ public class MainPage extends JFrame {
 
 
 		filterDisplay = new JLayeredPane();
-		filterDisplay.setBounds(0, 0, 752, 431);
+		filterDisplay.setBounds(0, 0, 744, 401);
 		display.add(filterDisplay);
 
 		Vector<String> filternames = new Vector<>();
@@ -542,7 +558,7 @@ public class MainPage extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(tglbtnFilterByMac.isSelected()) {
-					String newstr = txtfilter.getText().substring(0, txtfilter.getText().length()) + "MAC)";
+					String newstr = txtfilter.getText().substring(0, txtfilter.getText().length()) + "(MAC)";
 					txtfilter.setText(newstr);
 
 					choosemac = new JTextField();
@@ -608,24 +624,21 @@ public class MainPage extends JFrame {
 				display.revalidate();
 			}
 		});
-		
+		display.add(infoDisplay);
+
 		table = new JTable(data, columnNames);
 		table.setPreferredScrollableViewportSize(new Dimension(736, 372));
 		table.setFillsViewportHeight(true);
 		
-				JScrollPane scrollpane_1 = new JScrollPane(table);
-				scrollpane_1.setBounds(0, 0, 0, 0);
-				display.add(scrollpane_1);
-		display.add(infoDisplay);
-
-
+		scrollmap = new JScrollPane(table);
+		scrollmap.setBounds(0, 0, 0, 0);
+		display.add(scrollmap);
 	}
-
+	
 	private void googleMaps() {
 		/*https://stackoverflow.com/questions/13487786/add-webview-control-on-swing-jframe*/
 
 		Platform.runLater(() -> {
-
 			WebView webView = new WebView();
 			jfxPanel.setScene(new Scene(webView));
 			webView.getEngine().load("https://www.google.co.il/maps/@31.9503288,34.768555,15z?hl=iw");
@@ -670,22 +683,5 @@ public class MainPage extends JFrame {
 		if (result == JFileChooser.APPROVE_OPTION) {
 			selectedFile = fileChooser.getSelectedFiles();
 		}
-	}
-	private static void addPopup(Component component, final JPopupMenu popup) {
-		component.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			private void showMenu(MouseEvent e) {
-				popup.show(e.getComponent(), e.getX(), e.getY());
-			}
-		});
 	}
 }
