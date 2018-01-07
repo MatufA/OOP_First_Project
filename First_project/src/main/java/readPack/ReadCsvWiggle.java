@@ -1,5 +1,7 @@
 package main.java.readPack;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -20,31 +22,22 @@ import java.util.stream.Collectors;
 
 import main.java.databasePack.Network;
 
-import static java.nio.file.StandardCopyOption.*;
-
-// TODO: Auto-generated Javadoc
-/**
- * The Class ReadCsv.
- * This class gets csv file from WiggleWif only (path to file or folder)
- */
-public class ReadCsv {
+public class ReadCsvWiggle {
 	/*Csv database*/
 	private List<List<Network>> database = new ArrayList<List<Network>>();
 	/*Object of type Network*/
 	private Network wifiObj;
 	private String pathToFileOrFolder;
 	private int size;
+
+
 	/**
 	 * Instantiates a new read csv.
 	 * No path
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	
- 	public ReadCsv() throws IOException {
- 		 this.database = new ArrayList<List<Network>>();
- 		 this.wifiObj = new Network();
- 		 this.pathToFileOrFolder = null;
- 		 this.size = 0;
+	public ReadCsvWiggle() throws IOException {
 	}
 	/**
 	 * Instantiates a new read csv.
@@ -52,7 +45,7 @@ public class ReadCsv {
 	 * @author adiel, adi and yuda
 	 * @param path
 	 */
-	public ReadCsv(String path) {
+	public ReadCsvWiggle(String path) {
 		this.pathToFileOrFolder = path;
 	}
 	/**
@@ -141,7 +134,7 @@ public class ReadCsv {
 			FileReader readFile = new FileReader(path);
 			BufferedReader fileOpen = new BufferedReader(readFile);
 			String model = "NaN" , stop = null;
-			
+
 			//Temp list
 			List<Network> line_of_table = new ArrayList<Network>();
 			//Unsorted list
@@ -153,16 +146,7 @@ public class ReadCsv {
 
 			//Temp String[] 
 			String [] orFile = fileOpen.readLine().split(",");
-			if(orFile[0].contains("Wiggle") || orFile[0].contains("Wigle") ){
-				ReadCsvWiggle rcw = new ReadCsvWiggle();
-				System.out.println("You are a Wigle File");
-				rcw.getOrder(path);
-			}
-			else{
-				System.out.println("You are not a Wigle File");
-				ReadFinalCsvNoHeader rfcnh = new ReadFinalCsvNoHeader(path);
-			}
-			
+
 			//Array of required title
 			String[] title = {"MAC","SSID","AuthMode","FirstSeen","Channel","RSSI","CurrentLatitude",
 					"CurrentLongitude","AltitudeMeters"};
@@ -299,5 +283,12 @@ public class ReadCsv {
 		System.err.println(unauthorizedFile+" - " +"Unauthorized File, please change the file to authorized file (csv,txt or kml)!"); 
 
 	}
+	
+	public int getSize() {
+		return size;
+	}
 
+	
+	
+	
 }
