@@ -12,10 +12,12 @@ import main.java.databasePack.Network;
 public class ReadFinalCsvNoHeader {
 	private String path;
 	private List<List<Network>> database;
+	private int size;
 	
 	public ReadFinalCsvNoHeader(String pathToFile) {
 		this.database = new ArrayList<>();
 		this.path=pathToFile;
+		size=0;
 	}
 
 	public String read() throws IOException{
@@ -42,18 +44,20 @@ public class ReadFinalCsvNoHeader {
 			do {
 				data = new ArrayList<>();
 				readLine = fileOpen.readLine().split(",");
+				if(readLine[0].contains("Time")) readLine = fileOpen.readLine().split(",");
 				int numberOfPoint = Integer.parseInt(readLine[5].trim());
 				Network point;
 				for (int i = 0; i < numberOfPoint; i++) {
 				point = new Network(readLine[keyIndex.get("SSID")+i*4],
 						readLine[keyIndex.get("MAC")+i*4], 
-						Integer.parseInt(readLine[keyIndex.get("Frequncy")+i*4]), 
-						Integer.parseInt(readLine[keyIndex.get("Signal")+i*4]), 
+						Integer.parseInt(readLine[keyIndex.get("Frequncy")+i*4].trim()), 
+						Integer.parseInt(readLine[keyIndex.get("Signal")+i*4].trim()), 
 						readLine[keyIndex.get("Time")], 
 						readLine[keyIndex.get("ID")],
-						Double.parseDouble(readLine[keyIndex.get("Lat")]),
-						Double.parseDouble(readLine[keyIndex.get("Lon")]),
-						Double.parseDouble(readLine[keyIndex.get("Alt")]));
+						Double.parseDouble(readLine[keyIndex.get("Lat")].trim()),
+						Double.parseDouble(readLine[keyIndex.get("Lon")].trim()),
+						Double.parseDouble(readLine[keyIndex.get("Alt")].trim()));
+				size++;
 				data.add(point);
 				}
 				this.database.add(data);
@@ -70,4 +74,8 @@ public class ReadFinalCsvNoHeader {
 	public List<List<Network>> getDatabase() {
 		return database;
 	}
+	public int getSize() {
+		return size;
+	}
+
 }

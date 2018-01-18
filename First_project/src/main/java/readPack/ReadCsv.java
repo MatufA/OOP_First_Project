@@ -7,14 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +24,6 @@ public class ReadCsv {
 	/*Csv database*/
 	private List<List<Network>> database = new ArrayList<List<Network>>();
 	/*Object of type Network*/
-	private Network wifiObj;
 	private String pathToFileOrFolder;
 	private int size;
 	/**
@@ -42,7 +34,6 @@ public class ReadCsv {
 	
  	public ReadCsv() throws IOException {
  		 this.database = new ArrayList<List<Network>>();
- 		 this.wifiObj = new Network();
  		 this.pathToFileOrFolder = null;
  		 this.size = 0;
 	}
@@ -53,6 +44,8 @@ public class ReadCsv {
 	 * @param path
 	 */
 	public ReadCsv(String path) {
+		this.database = new ArrayList<List<Network>>();
+ 		this.size = 0;
 		this.pathToFileOrFolder = path;
 	}
 	/**
@@ -137,127 +130,28 @@ public class ReadCsv {
 	 */
 	public void getOrder(String path) throws IOException{
 		try {
-			/*//Read file
+			///Read file
 			FileReader readFile = new FileReader(path);
 			BufferedReader fileOpen = new BufferedReader(readFile);
-			String model = "NaN" , stop = null;
-			
-			//Temp list
-			List<Network> line_of_table = new ArrayList<Network>();
-			//Unsorted list
-			List<List<Network>> fileTable = new ArrayList<List<Network>>();
-
-			//Title index
-			HashMap<String, Integer>keyIndex = new HashMap<String,Integer>();
 
 			//Temp String[] 
-			String [] orFile = fileOpen.readLine().split(",");*/
+			String [] orFile = fileOpen.readLine().split(",");
+			//Close session
+			readFile.close();
 			if(orFile[0].contains("Wiggle") || orFile[0].contains("Wigle") ){
 				ReadCsvWiggle rcw = new ReadCsvWiggle(path);
 				System.out.println("You are a Wigle File");
 				rcw.read();
+				database.addAll(rcw.getDatabase());
+				size+=rcw.getSize();
 			}else{
 				System.out.println("You are not a Wigle File");
 				ReadFinalCsvNoHeader rfcnh = new ReadFinalCsvNoHeader(path);
 				rfcnh.read();
-			}
-			
-/*			//Array of required title
-			String[] title = {"MAC","SSID","AuthMode","FirstSeen","Channel","RSSI","CurrentLatitude",
-					"CurrentLongitude","AltitudeMeters"};
-
-			//Get ID
-			for (String temp_cell : orFile) {
-				if(temp_cell != null && temp_cell.contains("model")) {	
-					model = temp_cell.split("=")[1].trim();
-					break;
-				}
-			}
-			orFile = fileOpen.readLine().split(",");
-
-			//{MAC : 0 , SSID : 1 , AuthMode : 2 ....}, get title index
-			for (int i = 0 ; i < title.length; i++) {
-				keyIndex.put(orFile[i].trim(), i);
+				database.addAll(rfcnh.getDatabase());
+				size+=rfcnh.getSize();
 			}
 
-			stop = fileOpen.readLine();
-			if(stop != null) orFile = stop.split(",");
-			
-			//Create table
-			while(stop != null) {
-				//Add to line of list
-				wifiObj = new Network(orFile[keyIndex.get("SSID")] , orFile[keyIndex.get("MAC")] , 
-						Integer.parseInt(orFile[keyIndex.get("Channel")]) , 
-						Integer.parseInt(orFile[keyIndex.get("RSSI")]), 
-						orFile[keyIndex.get("FirstSeen")], model, 
-						Double.parseDouble(orFile[keyIndex.get("CurrentLatitude")]) ,
-						Double.parseDouble(orFile[keyIndex.get("CurrentLongitude")]) ,
-						Double.parseDouble(orFile[keyIndex.get("AltitudeMeters")]));
-				
-				line_of_table.add(wifiObj);
-				stop = fileOpen.readLine();
-				if(stop != null) orFile = stop.split(",");
-			}
-
-			//Move to main table, _fileTable, by date
-			int fromIndex = 0;
-			for (int i = 0 ; i < line_of_table.size()-1 ; i++) {
-				if(!line_of_table.get(i).getTime().trim().equals(line_of_table.get(i+1).getTime().trim())) {
-					fileTable.add(line_of_table.subList(fromIndex, i));
-					fromIndex = i+1;
-				}
-			}
-
-			if(fromIndex == 0 || fromIndex < line_of_table.size())
-				fileTable.add(line_of_table.subList(fromIndex, line_of_table.size()));
-			//Sort by signal
-			for (List<Network> obj : fileTable) {
-				Collections.sort(obj,new Comparator<Network>() {
-					public int compare(Network wifi1, Network wifi2) {
-						if(Math.abs(wifi1.getSignal()) < Math.abs(wifi2.getSignal()))
-							return -1;
-						if(Math.abs(wifi1.getSignal()) == Math.abs(wifi2.getSignal()))
-							return 0;
-						return 1;
-					}
-				});
-			}
-			
-			//Sort by Date
-			for (List<Network> obj : fileTable) {
-				Collections.sort(obj,new Comparator<Network>() {
-					public int compare(Network wifiLine1, Network wifiLine2) {
-						try {
-							DateFormat df1 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-							Date wifi1Time =  df1.parse(wifiLine1.getTime().trim());
-							Date wifi2Time =  df1.parse(wifiLine2.getTime().trim());
-							if(wifi2Time.before(wifi1Time))
-								return -1;
-							if(wifi1Time.equals(wifi2Time))
-								return 0;
-							return 1;
-						}catch (ParseException e) {
-							e.getCause();
-							return 0;
-						}
-					}
-				});
-				}
-			//Max of 10 element in each sublist
-			for (List<Network> net : fileTable) {
-				if(net.size() > 10) {
-					this.database.add(net.stream()
-							.limit(10)
-							.collect(Collectors.toList()));
-				}else {
-					this.database.add(net);
-					
-				}
-			}*/
-
-			//Close session
-			readFile.close();
-			System.out.println("The CSV creat successfully!");
 			//Delete temp file
 			File delete = new File("test_csv.csv");
 			Files.deleteIfExists(delete.toPath());
@@ -289,6 +183,9 @@ public class ReadCsv {
 		return type.toUpperCase();
 	}
 
+	public int getSize() {
+		return size;
+	}
 	/**
 	 * Unauthorized file.
 	 * @param unauthorizedFile

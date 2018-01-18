@@ -31,8 +31,8 @@ public class WriteCsvTest {
 			String str;
 			str = br.readLine();
 			String[] st = str.split(",");
-			for (int i = 0; i < st.length; i++) {
-				if(!st[i].trim().equals(firstHeader[i])){
+			for (int i = 0; i < firstHeader.length; i++) {
+				if(!st[i].trim().contains(firstHeader[i])){
 					fail("Invalid writeCsv");
 				}
 			}
