@@ -12,12 +12,19 @@ import java.util.List;
 public class MainDB {
 	private List<List<Network>> _database;
 	private int _size;
-
+/**
+ * Initilize
+ * @author adiel, adi and yuda
+ * */
 	public MainDB() {
 		_database = new ArrayList<>();
 		_size=0;
 	}
-	
+	/**
+	 * Initilize
+	 * @author adiel, adi and yuda
+	 * @param database list
+	 * */
 	public MainDB(List<List<Network>> database) {
 		this._database = new ArrayList<>();
 		this._database.addAll(database);
@@ -26,7 +33,39 @@ public class MainDB {
 		sort();
 		removeDuplicate();
 	}
-
+	/**
+	 * Initilize
+	 * @author adiel, adi and yuda
+	 * @param database list
+	 * */
+	public MainDB(MainDB other) {
+		this._database = new ArrayList<>();
+		this._database.addAll(other.getdatabase());
+		_size=0;
+		removeEmpty();
+		sort();
+		removeDuplicate();
+	}
+	/**
+	 * Add another full database
+	 * @param add list of  data 
+	 * @return True if secceed, else False 
+	 */
+		public boolean add(MainDB other) {
+			if(!other.isEmpty()) {
+					_database.addAll(other.getdatabase());
+					removeEmpty();
+					sort();
+					removeDuplicate();
+					return true;
+			}
+			return false;
+		}
+/**
+ * Add another database
+ * @param add list of  data 
+ * @return True if secceed, else False 
+ */
 	public boolean add(List<List<Network>> data) {
 		if(!data.isEmpty()) {
 				_database.addAll(data);
@@ -37,7 +76,11 @@ public class MainDB {
 		}
 		return false;
 	}
-
+/**
+ * Add line to database
+ * @param add one line of data
+ * @return True if secceed, else False
+ */
 	public boolean addList(List<Network> data) {
 		if(data.get(0) instanceof Network) {
 			_database.add(data);
@@ -47,19 +90,26 @@ public class MainDB {
 			return true;
 		}else return false;
 	}
-	
+	/**
+	 * Remove all database
+	 */
 	public void removeAll() {
 		if(!isEmpty()) {
 			_database.removeAll(_database);
 		}
 	}	
-	
+	/**
+	 * Remove line
+	 * @param place of line
+	 */
 	public void remove(int i) {
 		if(!isEmpty()) {
 			_database.remove(i);
 		}
 	}
-	
+	/**
+	 * Sort by date
+	 */
 	private void sort() {
 		if(_database.size()>1) {
 			//Sort by Date
@@ -82,7 +132,9 @@ public class MainDB {
 				});		
 		}
 	}
-	
+	/**
+	 * Remove if there is an empty line
+	 */
 	private void removeEmpty() {
 		if(!isEmpty()) {
 			for (List<Network> list : _database) {
@@ -91,8 +143,9 @@ public class MainDB {
 			}
 		}
 	}
-	
-
+/*
+ * Remove duplicate if exists
+ */
 	private void removeDuplicate() {
 		if(_database.size()>1) {
 			for (int i =0; i < _database.size()-1; i++) {
@@ -106,7 +159,11 @@ public class MainDB {
 		}
 		
 	}
-	
+	/**
+	 * Check if the MAC address exists in the database
+	 * @param MAC address
+	 * @return True if exists, else False
+	 */
 	public boolean hasMAC(String name) {
 		if(!isEmpty()) {
 			for (List<Network> list : _database) {
@@ -118,7 +175,11 @@ public class MainDB {
 		return false;
 		
 	}
-	
+	/**
+	 * Check if the ID exists in the database
+	 * @param ID address
+	 * @return True if exists, else False
+	 */
 	public boolean hasID(String name) {
 		if(!isEmpty()) {
 			for (List<Network> list : _database) {
@@ -129,15 +190,24 @@ public class MainDB {
 		}
 		return false;
 	}
-	
+	/**
+	 * Check if database is empty
+	 * @return True if empty, else False
+	 */
 	public boolean isEmpty() {
 		return _database.isEmpty();
 	}
-
+	/**
+	 * Get current size
+	 * @return size 
+	 */
 	public int get_size() {
 		return _size;
 	}
-	
+	/**
+	 * Get all database
+	 * @return database as list
+	 */
 	public List<List<Network>> getdatabase() {
 		return this._database;
 	}

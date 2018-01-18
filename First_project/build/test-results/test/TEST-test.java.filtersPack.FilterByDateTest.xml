@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="test.java.filtersPack.FilterByDateTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2018-01-18T14:55:59" hostname="Adiel-Matuf" time="0.035">
+<testsuite name="test.java.filtersPack.FilterByDateTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2018-01-18T15:20:42" hostname="Adiel-Matuf" time="0.042">
   <properties/>
-  <testcase name="testComperable" classname="test.java.filtersPack.FilterByDateTest" time="0.027"/>
+  <testcase name="testComperable" classname="test.java.filtersPack.FilterByDateTest" time="0.034"/>
   <testcase name="testFilterNOT" classname="test.java.filtersPack.FilterByDateTest" time="0.003"/>
-  <testcase name="testFilter" classname="test.java.filtersPack.FilterByDateTest" time="0.004"/>
+  <testcase name="testFilter" classname="test.java.filtersPack.FilterByDateTest" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

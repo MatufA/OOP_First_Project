@@ -20,6 +20,8 @@ import javax.swing.JFileChooser;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import main.java.readPack.ReadCsv;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.UIManager;
 import java.awt.SystemColor;
@@ -90,7 +92,7 @@ public class Home extends JFrame {
 		lblAdiAchwal.setForeground(SystemColor.menu);
 		lblAdiAchwal.setFont(new Font("Levenim MT", Font.PLAIN, 18));
 		
-		JLabel lblYehudaNeumann = new JLabel("Yehuda Newmann");
+		JLabel lblYehudaNeumann = new JLabel("Yehuda Neumann");
 		lblYehudaNeumann.setBounds(187, 120, 166, 26);
 		contentPane.add(lblYehudaNeumann);
 		lblYehudaNeumann.setForeground(SystemColor.menu);
@@ -109,18 +111,6 @@ public class Home extends JFrame {
 				}
 			}
 		});
-		
-		JPanel panel = new JPanel();
-		panel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, new Color(255, 255, 224), new Color(255, 255, 224), null, null));
-		panel.setBackground(new Color(51, 51, 51));
-		panel.setBounds(0, 0, 365, 443);
-		contentPane.add(panel);
-		panel.setLayout(null);
-		
-		JLabel Earth_logo = new JLabel("");
-		Earth_logo.setBounds(0, 0, 3000, 3075);
-		panel.add(Earth_logo);
-		Earth_logo.setIcon(new ImageIcon(Home.class.getResource("/main/java/GUIPack/images/Earth_banner_1600x600_v4.jpg")));
 		upload_button.setBounds(444, 179, 219, 44);
 		contentPane.add(upload_button);
 		
@@ -150,6 +140,11 @@ public class Home extends JFrame {
 		exit_button.setBackground(new Color(0, 0, 51));
 		exit_button.setBounds(444, 279, 219, 44);
 		contentPane.add(exit_button);
+		
+		JLabel Earth_logo = new JLabel("");
+		Earth_logo.setBounds(-15, -47, 800, 515);
+		contentPane.add(Earth_logo);
+		Earth_logo.setIcon(new ImageIcon(Home.class.getResource("/main/java/GUIPack/images/Earth_banner_1600x600_v4.jpg")));
 	}
 	private void uploadfile() throws IOException {
 		JFileChooser fileChooser = new JFileChooser();
@@ -162,15 +157,14 @@ public class Home extends JFrame {
 		//File file;
 		if (result == JFileChooser.APPROVE_OPTION) {
 		   selectedFile = fileChooser.getSelectedFiles();
-		    /*for (int i = 0; i < selectedFile.length; i++) {
-				 file = selectedFile[i];
-				 System.out.println("Selected file: " + file.getAbsolutePath());
-			}*/
+		   
 		   this.setVisible(false);
 		   EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					try {
-						MainPage frame = new MainPage(selectedFile);
+						//MainPage frame = new MainPage(selectedFile);
+						//frame.setVisible(true);
+						filterPage frame = new filterPage(selectedFile);
 						frame.setVisible(true);
 						
 					} catch (Exception e) {

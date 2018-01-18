@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="test.java.writePack.WriteCsvTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2018-01-18T14:55:59" hostname="Adiel-Matuf" time="0.003">
+<testsuite name="test.java.writePack.WriteCsvTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2018-01-18T15:20:43" hostname="Adiel-Matuf" time="0.002">
   <properties/>
-  <testcase name="testWriteCsvListOfListOfNetwork" classname="test.java.writePack.WriteCsvTest" time="0.003"/>
+  <testcase name="testWriteCsvListOfListOfNetwork" classname="test.java.writePack.WriteCsvTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

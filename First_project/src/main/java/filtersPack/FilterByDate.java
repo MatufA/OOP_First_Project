@@ -17,6 +17,7 @@ public class FilterByDate extends Filter{
 	/*Parameter from user*/
 	private String start , end;
 	private int size=0;
+	
 	/**
 	 * Instantiates a new filter by Date.
 	 *
@@ -28,8 +29,8 @@ public class FilterByDate extends Filter{
 	public FilterByDate(List<List<Network>> csvList , String start , String end) {
 		this.file = new ArrayList<>(csvList); 
 		this.filteredFile = new ArrayList<>();
-		this.start = dateFix(start);
-		this.end = dateFix(end);
+		this.start = (start!=null)? dateFix(start):"01/01/1000 00:00:00";
+		this.end = (end!=null)? dateFix(end):"01/01/9999 00:00:00";
 	}
 	/*
 	 *After constract Filter by Date, run filter function 

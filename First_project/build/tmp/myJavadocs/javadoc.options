@@ -1,7 +1,7 @@
 -d 'C:\\Users\\adiel\\git\\OOP_First_Project\\First_project\\build\\docs\\javadoc'
--doctitle 'First_project API'
+-doctitle 'First_project 1.0 API'
 -quiet 
--windowtitle 'First_project API'
+-windowtitle 'First_project 1.0 API'
 'C:\\Users\\adiel\\git\\OOP_First_Project\\First_project\\src\\main\\java\\algorithmsPack\\UserLocation.java'
 'C:\\Users\\adiel\\git\\OOP_First_Project\\First_project\\src\\main\\java\\algorithmsPack\\WifiSpotLocation.java'
 'C:\\Users\\adiel\\git\\OOP_First_Project\\First_project\\src\\main\\java\\databasePack\\MainDB.java'

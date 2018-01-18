@@ -31,7 +31,6 @@ import javax.swing.JLabel;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 import main.java.databasePack.MainDB;
-import main.java.databasePack.Network;
 
 import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
@@ -64,6 +63,10 @@ import javax.swing.JTable;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import main.java.databasePack.Network;
+import main.java.filtersPack.FilterByMAC;
+import javax.swing.JButton;
+
 
 public class MainPage extends JFrame {
 
@@ -78,6 +81,8 @@ public class MainPage extends JFrame {
 	private JTable table;
 	private final JFXPanel jfxPanel = new JFXPanel();
 	private static HashMap<File, FileTime> files = new HashMap<>();
+	
+	
 	private MainDB database = new MainDB(), filterDB = new MainDB();
 	private JScrollPane scrollmap;
 	private JScrollPane scrolltable;
@@ -124,6 +129,7 @@ public class MainPage extends JFrame {
 	 * @throws IOException 
 	 */
 	public MainPage(File[] selectedFile) throws IOException {
+		
 		setResizable(false);
 		MainPage.selectedFile = selectedFile;
 		checkModifiedTime(MainPage.selectedFile);
@@ -132,6 +138,8 @@ public class MainPage extends JFrame {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 500);
+		
+		
 		contentPane = new JPanel();
 		contentPane.setForeground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -530,7 +538,9 @@ public class MainPage extends JFrame {
 		JLayeredPane modemLocationDisplay = new JLayeredPane();
 		modemLocationDisplay.setBounds(0, 0, 752, 431);
 		display.add(modemLocationDisplay);
-
+		modemLocationDisplay.setLayout(null);
+		
+		
 		JLayeredPane userLocationDisplay = new JLayeredPane();
 		userLocationDisplay.setBounds(0, 0, 752, 431);
 		display.add(userLocationDisplay);
@@ -551,22 +561,51 @@ public class MainPage extends JFrame {
 		filterDisplay.add(txtfilter);
 		txtfilter.setColumns(10);
 		txtfilter.setText("filter( )");
-
-
+		
+		choosemac = new JTextField();
+		choosemac.setVisible(false);
+		choosemac.setBounds(93, 100, 121, 23);
+		
+		JButton MacOk = new JButton("OK");
+		MacOk.setBounds(167, 142, 62, 37);
+		filterDisplay.add(MacOk);
+		MacOk.setVisible(false);
+		MacOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String str = choosemac.getText();
+				FilterByMAC fMac = new FilterByMAC(database.getdatabase(), str);
+				System.out.println(fMac.filter());
+				System.out.println(str);
+			}
+		});
+		
+		String newstr = "";
 		tglbtnFilterByMac = new JToggleButton("Filter By mac");
 		tglbtnFilterByMac.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+			/*	String filter = (String) chooseFilter.getSelectedItem();
+				System.out.println(filter + "    filter");
+				if(filter == "Device"){
+					MySQLFilters gf = new MySQLFilters();
+					String dev= (String)MinInput.getText();
+					gf.DevFilter(dev);
+					clicked = true;
+					
+				}*/
+				
+				
 				if(tglbtnFilterByMac.isSelected()) {
+					//MacOk.setVisible(true);
 					String newstr = txtfilter.getText().substring(0, txtfilter.getText().length()) + "(MAC)";
 					txtfilter.setText(newstr);
 
-					choosemac = new JTextField();
-					choosemac.setBounds(93, 100, 121, 23);
-
+					
 					filterDisplay.add(choosemac);
 					choosemac.setColumns(10);
-
+					choosemac.setVisible(true);
+					MacOk.setVisible(true);
+					
 					filterDisplay.remove(txtfilter);
 					filterDisplay.add(txtfilter);
 					contentPane.add(filterDisplay);
@@ -575,8 +614,10 @@ public class MainPage extends JFrame {
 						newstr ="";
 						if(choosemac.getText().split(":").length==6) {
 							newstr = txtfilter.getText().substring(0, str.length()) + str;
+							
 						}
-						txtfilter.setText(newstr); 
+						
+						txtfilter.setText(""); 
 						choosemac = new JTextField();
 						choosemac.setBounds(93, 100, 121, 23);
 
@@ -587,9 +628,13 @@ public class MainPage extends JFrame {
 				}
 			}
 		});
+		
+
+				
 
 		tglbtnFilterByMac.setBounds(93, 72, 121, 23);
 		filterDisplay.add(tglbtnFilterByMac);
+
 
 		tglbtnFilterByTime = new JToggleButton("Filter By Time");
 		tglbtnFilterByTime.addMouseListener(new MouseAdapter() {
@@ -682,6 +727,23 @@ public class MainPage extends JFrame {
 		int result = fileChooser.showOpenDialog(upload);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			selectedFile = fileChooser.getSelectedFiles();
+			for (File file : selectedFile) {
+				try {
+					if(file.exists()){
+						FileTime filetime = Files.getLastModifiedTime(file.toPath(),LinkOption.NOFOLLOW_LINKS);
+						if(files.isEmpty()||!files.containsKey(file) || (files.containsKey(file) && !files.get(file).equals(filetime))) {
+							files.put(file, filetime);
+							System.out.println("Selected file: " + file.getAbsolutePath());
+							ReadCsv readFile= new ReadCsv(file.getAbsolutePath());
+							readFile.read();
+							database.add(readFile.getDatabase());
+						}
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
 		}
 	}
 }

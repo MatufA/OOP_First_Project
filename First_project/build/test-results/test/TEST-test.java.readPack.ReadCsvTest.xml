@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="test.java.readPack.ReadCsvTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2018-01-18T14:55:59" hostname="Adiel-Matuf" time="0.092">
+<testsuite name="test.java.readPack.ReadCsvTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2018-01-18T15:20:42" hostname="Adiel-Matuf" time="0.089">
   <properties/>
   <testcase name="testReadCsvString" classname="test.java.readPack.ReadCsvTest" time="0.087"/>
-  <testcase name="testFileType" classname="test.java.readPack.ReadCsvTest" time="0.003"/>
+  <testcase name="testFileType" classname="test.java.readPack.ReadCsvTest" time="0.001"/>
   <system-out><![CDATA[WigleWifi_20171031013535.csv
 The CSV copy successfully!
 You are not a Wigle File
