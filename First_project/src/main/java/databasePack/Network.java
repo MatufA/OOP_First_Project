@@ -45,7 +45,7 @@ public class Network {
 		this.frequncy = (nFrequncy != 0) ? nFrequncy:0;
 		this.signal = (nSignal != 0) ? nSignal:0;
 		// dd/MM/yyyy HH:mm:ss
-		this.time = (!nTime.equals(null)) ? nTime:"01//01//1000 00:00:00";
+		this.time = (!nTime.equals(null)) ? dateFix(nTime):"01//01//1000 00:00:00";
 		this.id = (!nId.equals(null)) ? nId:"NaN";
 		this.lat = (nLat != 0) ? nLat:0;
 		this.lon = (nLon != 0) ? nLon:0;
@@ -71,6 +71,9 @@ public class Network {
 		this.signal = 0;
 		this.time = "dd/MM/yyyy HH:mm:ss";
 	}
+	/*
+	 * Copy network
+	 * */
 	public Network(Network other) {
 		this.mac = (!other.getMac().equals(null)) ? other.getMac(): "NaN";
 		this.ssid = (!other.getSsid().equals(null)) ? other.getSsid():"NaN";
@@ -82,6 +85,12 @@ public class Network {
 		this.lat = (other.getLat() != 0) ? other.getLat():0;
 		this.lon = (other.getLon() != 0) ? other.getLon():0;
 		this.alt = (other.getAlt() != 0) ? other.getAlt():0;
+	}
+	/**/
+	private String dateFix(String date) {
+		String [] fix = date.split("/D");
+		String second = (fix.length<6)? "00":fix[5] ;
+		return fix[0]+"/"+fix[1]+"/"+fix[2]+" "+ fix[3]+":"+fix[4]+":"+second;
 	}
 	/**
 	 * Gets the id.

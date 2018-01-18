@@ -147,20 +147,19 @@ public class ReadCsv {
 			//Unsorted list
 			List<List<Network>> fileTable = new ArrayList<List<Network>>();
 
-
 			//Title index
 			HashMap<String, Integer>keyIndex = new HashMap<String,Integer>();
 
 			//Temp String[] 
 			String [] orFile = fileOpen.readLine().split(",");
 			if(orFile[0].contains("Wiggle") || orFile[0].contains("Wigle") ){
-				ReadCsvWiggle rcw = new ReadCsvWiggle();
+				ReadCsvWiggle rcw = new ReadCsvWiggle(path);
 				System.out.println("You are a Wigle File");
-				rcw.getOrder(path);
-			}
-			else{
+				rcw.read();
+			}else{
 				System.out.println("You are not a Wigle File");
 				ReadFinalCsvNoHeader rfcnh = new ReadFinalCsvNoHeader(path);
+				rfcnh.read();
 			}
 			
 			//Array of required title

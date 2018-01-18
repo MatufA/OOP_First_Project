@@ -5,7 +5,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import main.java.databasePack.Network;
-import main.java.filtersPack.FilterAll;
 import main.java.filtersPack.FilterByDate;
 
 public class FilterByDateTest extends TestCase {

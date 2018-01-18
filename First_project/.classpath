@@ -11,6 +11,6 @@
 	<classpathentry kind="lib" path="Extensions/jgoodies-forms-1.8.0.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="lib" path="Extensions/mysql-connector-java-5.1.45/mysql-connector-java-5.1.45-bin.jar"/>
-	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
+	<classpathentry kind="lib" path="C:/Users/adiel/git/OOP_First_Project/First_project/Extensions/miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

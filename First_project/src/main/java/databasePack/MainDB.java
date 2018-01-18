@@ -24,13 +24,15 @@ public class MainDB {
 		_size=0;
 		removeEmpty();
 		sort();
+		removeDuplicate();
 	}
-	
+
 	public boolean add(List<List<Network>> data) {
 		if(!data.isEmpty()) {
 				_database.addAll(data);
 				removeEmpty();
 				sort();
+				removeDuplicate();
 				return true;
 		}
 		return false;
@@ -41,6 +43,7 @@ public class MainDB {
 			_database.add(data);
 			removeEmpty();
 			sort();
+			removeDuplicate();
 			return true;
 		}else return false;
 	}
@@ -85,6 +88,21 @@ public class MainDB {
 				else _size += list.size();
 			}
 		}
+	}
+	
+
+	private void removeDuplicate() {
+		if(!isEmpty()) {
+			for (int i =0; i < _database.size()-1; i++) {
+				if( _database.get(i).get(0).getId().equalsIgnoreCase(_database.get(i+1).get(0).getId()) 
+						&&_database.get(i).get(0).getTime().equalsIgnoreCase(_database.get(i+1).get(0).getTime()) ) {
+					_database.remove(i+1);
+					_size--;
+				}
+				i--;
+			}
+		}
+		
 	}
 	
 	public boolean hasMAC(String name) {
