@@ -88,8 +88,8 @@ public class Network {
 	}
 	/**/
 	private String dateFix(String date) {
-		String [] fix = date.split("/D");
-		String second = (fix.length<6)? "00":fix[5] ;
+		String [] fix = date.split("\\D");
+		String second = (fix.length<6)? "00":fix[5];
 		return fix[0]+"/"+fix[1]+"/"+fix[2]+" "+ fix[3]+":"+fix[4]+":"+second;
 	}
 	/**

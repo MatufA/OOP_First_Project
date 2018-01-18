@@ -26,7 +26,7 @@ public class WriteCsvTest {
 		String [] firstHeader = {"Time", "ID", "Lat", "Lon", "Alt", "WiFi networks","SSID" ,"MAC"  ,"Frequncy"  ,"Signal"};
 		FileReader fr;
 		try {
-			fr = new FileReader ("writecsvtest.csv");
+			fr = new FileReader ("Test\\junitTest\\WigleWifi_20171031013535.csv");
 			BufferedReader br = new BufferedReader(fr);
 			String str;
 			str = br.readLine();

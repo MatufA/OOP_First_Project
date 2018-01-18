@@ -61,24 +61,26 @@ public class MainDB {
 	}
 	
 	private void sort() {
-		//Sort by Date
-			Collections.sort(_database,new Comparator<List<Network>>() {
-				public int compare(List<Network> wifiLine1, List<Network> wifiLine2) {
-					try {
-						DateFormat df1 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-						Date wifi1Time =  df1.parse(wifiLine1.get(0).getTime().trim());
-						Date wifi2Time =  df1.parse(wifiLine2.get(0).getTime().trim());
-						if(wifi2Time.before(wifi1Time))
-							return -1;
-						if(wifi1Time.equals(wifi2Time))
+		if(_database.size()>1) {
+			//Sort by Date
+				Collections.sort(_database,new Comparator<List<Network>>() {
+					public int compare(List<Network> wifiLine1, List<Network> wifiLine2) {
+						try {
+							DateFormat df1 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+							Date wifi1Time =  df1.parse(wifiLine1.get(0).getTime().trim());
+							Date wifi2Time =  df1.parse(wifiLine2.get(0).getTime().trim());
+							if(wifi2Time.before(wifi1Time))
+								return -1;
+							if(wifi1Time.equals(wifi2Time))
+								return 0;
+							return 1;
+						}catch (ParseException e) {
+							e.getCause();
 							return 0;
-						return 1;
-					}catch (ParseException e) {
-						e.getCause();
-						return 0;
+						}
 					}
-				}
-			});		
+				});		
+		}
 	}
 	
 	private void removeEmpty() {
@@ -92,7 +94,7 @@ public class MainDB {
 	
 
 	private void removeDuplicate() {
-		if(!isEmpty()) {
+		if(_database.size()>1) {
 			for (int i =0; i < _database.size()-1; i++) {
 				if( _database.get(i).get(0).getId().equalsIgnoreCase(_database.get(i+1).get(0).getId()) 
 						&&_database.get(i).get(0).getTime().equalsIgnoreCase(_database.get(i+1).get(0).getTime()) ) {

@@ -18,7 +18,7 @@ public class NetworkTest extends TestCase {
 			Ioutput = a.getSignal();
 			assertEquals(-68, Ioutput);
 			String output1 = a.getTime();
-			assertEquals("28/10/2017 20:10", output1);
+			assertEquals("28/10/2017 20:10:00", output1);
 			output1 = a.getId();
 			assertEquals("ONEPLUS A3003", output1);
 			double doutput = a.getLat();
@@ -55,7 +55,7 @@ public class NetworkTest extends TestCase {
 			Ioutput = a.getSignal();
 			assertEquals(-68, Ioutput);
 			String output1 = a.getTime();
-			assertEquals("28/10/2017 20:10", output1);
+			assertEquals("28/10/2017 20:10:00", output1);
 			output1 = a.getId();
 			assertEquals("ONEPLUS A3003", output1);
 			double doutput = a.getLat();

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="test.java.databasePack.MainDBTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2018-01-18T12:57:35" hostname="Adiel-Matuf" time="0.016">
+  <properties/>
+  <testcase name="testAddList" classname="test.java.databasePack.MainDBTest" time="0.009"/>
+  <testcase name="testAdd" classname="test.java.databasePack.MainDBTest" time="0.001"/>
+  <testcase name="testHasID" classname="test.java.databasePack.MainDBTest" time="0.0"/>
+  <testcase name="testHasMAC" classname="test.java.databasePack.MainDBTest" time="0.0"/>
+  <testcase name="testIsEmpty" classname="test.java.databasePack.MainDBTest" time="0.0"/>
+  <testcase name="testRemove" classname="test.java.databasePack.MainDBTest" time="0.001"/>
+  <testcase name="testRemoveAll" classname="test.java.databasePack.MainDBTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -61,7 +61,6 @@ public class FilterByDateTest extends TestCase {
 		}	}
 
 	public void testComperable() {
-		
 		Network a = new Network("Bezeq-NGN_E9CBFB", "cc:b2:55:e9:cb:fc", 6, -68, 
 				"28/10/2017 20:11", "ONEPLUS A3003" , 32.09038727, 34.87862948, 56.0);
 		
@@ -78,15 +77,11 @@ public class FilterByDateTest extends TestCase {
 		String start = "28/10/2017 20:10";
 		String end = "29/10/2017 20:10";
 		
-		FilterByDate filter = new FilterByDate(temp,start ,end);
-		
-		if (!filter.comperable()){
+		FilterByDate filter = new FilterByDate(temp,start,end);
+		filter.filter();
+
+		if (filter.getSize()!=2){
 			fail("Not yet implemented");
 		}
 	}
-
-	public void testFilterByDate() {
-		fail("Not yet implemented");
-	}
-
 }

@@ -137,7 +137,7 @@ public class ReadCsv {
 	 */
 	public void getOrder(String path) throws IOException{
 		try {
-			//Read file
+			/*//Read file
 			FileReader readFile = new FileReader(path);
 			BufferedReader fileOpen = new BufferedReader(readFile);
 			String model = "NaN" , stop = null;
@@ -151,7 +151,7 @@ public class ReadCsv {
 			HashMap<String, Integer>keyIndex = new HashMap<String,Integer>();
 
 			//Temp String[] 
-			String [] orFile = fileOpen.readLine().split(",");
+			String [] orFile = fileOpen.readLine().split(",");*/
 			if(orFile[0].contains("Wiggle") || orFile[0].contains("Wigle") ){
 				ReadCsvWiggle rcw = new ReadCsvWiggle(path);
 				System.out.println("You are a Wigle File");
@@ -162,7 +162,7 @@ public class ReadCsv {
 				rfcnh.read();
 			}
 			
-			//Array of required title
+/*			//Array of required title
 			String[] title = {"MAC","SSID","AuthMode","FirstSeen","Channel","RSSI","CurrentLatitude",
 					"CurrentLongitude","AltitudeMeters"};
 
@@ -253,7 +253,7 @@ public class ReadCsv {
 					this.database.add(net);
 					
 				}
-			}
+			}*/
 
 			//Close session
 			readFile.close();

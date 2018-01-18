@@ -28,8 +28,8 @@ public class FilterByDate extends Filter{
 	public FilterByDate(List<List<Network>> csvList , String start , String end) {
 		this.file = new ArrayList<>(csvList); 
 		this.filteredFile = new ArrayList<>();
-		this.start = start;
-		this.end = end;
+		this.start = dateFix(start);
+		this.end = dateFix(end);
 	}
 	/*
 	 *After constract Filter by Date, run filter function 
@@ -102,7 +102,7 @@ public class FilterByDate extends Filter{
 			Date wifiDate = df.parse(wifiSpot.getTime().trim());
 			Date startTime =  df.parse(start);
 			Date endTime = df.parse(end);
-			return wifiDate.after(startTime) && wifiDate.before(endTime);
+			return (wifiDate.after(startTime) && wifiDate.before(endTime))|| (wifiDate.equals(startTime))||(wifiDate.equals(endTime));
 		} catch (ParseException e) {
 			System.out.println("Problem occurred while data format!");
 			e.printStackTrace();
@@ -121,5 +121,10 @@ public class FilterByDate extends Filter{
 	public int getSize() {
 		return size;
 	}
-	
+	/**/
+	private String dateFix(String date) {
+		String [] fix = date.split("\\D");
+		String second = (fix.length<6)? "00":fix[5];
+		return fix[0]+"/"+fix[1]+"/"+fix[2]+" "+ fix[3]+":"+fix[4]+":"+second;
+	}
 }

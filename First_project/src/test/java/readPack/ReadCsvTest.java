@@ -19,7 +19,7 @@ public class ReadCsvTest {
 	 */
 	@Test
 	public void testReadCsvString() {
-		String file = "28.10" ;
+		String file = "Test\\junitTest" ;
 		try {
 			ReadCsv a = new ReadCsv(file);
 			a.read();
@@ -38,7 +38,7 @@ public class ReadCsvTest {
 	@Test
 	public void testFileType() {
 		
-		String file = "28.10\\WigleWifi_20171028203300.csv" ;
+		String file = "Test\\junitTest\\WigleWifi_20171028203300.csv" ;
 		try {
 			ReadCsv a = new ReadCsv(file);
 			a.read();
